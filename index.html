@@ -41,6 +41,13 @@
   .card { background: var(--panel); border: 1px solid var(--line); border-radius: 1rem; padding: 1.25rem; }
   .card h3 { margin: 0 0 .4rem; font-size: 1.05rem; }
   .card p { margin: 0; color: var(--muted); font-size: .95rem; }
+  .work { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr)); }
+  .work .card { display: flex; flex-direction: column; gap: .2rem; }
+  .work img { width: 100%; height: 11rem; object-fit: cover; object-position: top; border-radius: .7rem; border: 1px solid var(--line); background: var(--bg); margin-bottom: .8rem; image-rendering: auto; }
+  .work img.fit { object-fit: contain; image-rendering: pixelated; }
+  .work .stack { margin-top: .6rem; font-size: .8rem; color: var(--accent); }
+  .work .buttons { margin-top: .8rem; }
+  .work .card .tag { align-self: flex-start; }
   .tag { display: inline-block; font-size: .75rem; color: var(--accent-2); border: 1px solid #19d3b055; border-radius: 99px; padding: .1rem .6rem; margin-bottom: .6rem; }
   ol.steps { list-style: none; counter-reset: s; padding: 0; margin: 0; display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); }
   ol.steps li { counter-increment: s; background: var(--panel); border: 1px solid var(--line); border-radius: 1rem; padding: 1.25rem 1.25rem 1.25rem 3.4rem; position: relative; color: var(--muted); }
@@ -101,14 +108,38 @@
 
   <section id="projects"><div class="wrap">
     <h2 data-i18n="projectsTitle"></h2>
-    <div class="card">
-      <span class="tag" data-i18n="projectTag"></span>
-      <h3>Kairos</h3>
-      <p data-i18n="projectDesc"></p>
-      <div class="buttons">
-        <a class="btn ghost" href="https://github.com/Kokosek-Dev/Kairos" data-i18n="projectCode"></a>
-        <a class="btn ghost" href="https://kokosek-dev.github.io/Kairos/" data-i18n="projectSite"></a>
-      </div>
+    <div class="work">
+      <article class="card">
+        <img src="img/hush-map.png" alt="Floor plan of the HUSH map made by the Python generator" loading="lazy">
+        <span class="tag" data-i18n="w1s"></span>
+        <h3>HUSH</h3>
+        <p data-i18n="w1d"></p>
+        <p class="stack">Luau · Python · Rojo · Roblox Studio</p>
+      </article>
+      <article class="card">
+        <img class="fit" src="img/voidforged-items.png" alt="Item icons of the Voidforged mod" loading="lazy">
+        <span class="tag" data-i18n="w2s"></span>
+        <h3>Voidforged</h3>
+        <p data-i18n="w2d"></p>
+        <p class="stack">Java · Fabric · Minecraft 1.21.11</p>
+      </article>
+      <article class="card">
+        <img src="img/kairos.png" alt="The Kairos texture editor" loading="lazy">
+        <span class="tag" data-i18n="projectTag"></span>
+        <h3>Kairos</h3>
+        <p data-i18n="projectDesc"></p>
+        <p class="stack">Rust · Tauri · React · TypeScript</p>
+        <div class="buttons">
+          <a class="btn ghost" href="https://github.com/Kokosek-Dev/Kairos" data-i18n="projectCode"></a>
+          <a class="btn ghost" href="https://kokosek-dev.github.io/Kairos/" data-i18n="projectSite"></a>
+        </div>
+      </article>
+      <article class="card">
+        <span class="tag" data-i18n="w4s"></span>
+        <h3>Discord Maker</h3>
+        <p data-i18n="w4d"></p>
+        <p class="stack">Python · discord.py</p>
+      </article>
     </div>
   </div></section>
 
@@ -181,7 +212,12 @@ const TEXT = {
     s4t: "Gry w Unity 2D i 3D", s4d: "Prototypy i małe gry w C#: platformówki, gry top-down, proste 3D.",
     s5t: "Narzędzia i aplikacje", s5d: "Aplikacje na komputer i strony w Rust, TypeScript i React, a do Minecrafta także mody.",
     s6t: "Programy w C++", s6d: "Szybkie programy na komputer, narzędzia konsolowe i wtyczki w C++.",
-    projectsTitle: "Projekt, którym się chwalę", projectTag: "Otwarty kod, MIT",
+    projectsTitle: "Wybrane prace",
+    w1s: "W produkcji", w2s: "W produkcji, tymczasowa grafika", w4s: "Narzędzie prywatne",
+    w1d: "Kooperacyjny horror na Roblox, w którym ślepy potwór poluje wyłącznie na dźwięk. Hałas robi wszystko: kroki, drzwi, czat, a nawet prawdziwy głos z mikrofonu. Lobby z windami zabiera znajomych razem, są butelki do odwracania uwagi, kamery bezpieczeństwa i wsparcie VR (eksperymentalne). Mapę buduje generator w Pythonie, a AI potwora jest testowane offline.",
+    w2d: "Mod do Minecrafta (Fabric) na końcówkę gry w Endzie: sprzęt z Enderytu, Void Elytra z zrywem, własne enchanty, nowy biom z własnym drewnem i jedzeniem, struktury ze świątyniami parkourowymi, osiągnięcia i config w JSON. Komenda selftest sprawdza, że enchantów nie da się nadużyć.",
+    w4d: "Bot Discorda, który buduje cały serwer z opisu: role, kanały, regulamin i wiadomości powitalne. Dostajesz podgląd, poprawiasz go przyciskami i zatwierdzasz.",
+    projectTag: "Otwarty kod, MIT",
     projectDesc: "Niezależny launcher Minecrafta z instancjami Java i Bedrock, detektywem modów, edytorem tekstur i skinów oraz automatycznymi aktualizacjami. Cały kod jest otwarty, więc możesz sprawdzić, jak pracuję.",
     projectCode: "Kod na GitHubie", projectSite: "Strona Kairosa",
     howTitle: "Jak to działa",
@@ -214,7 +250,12 @@ const TEXT = {
     s4t: "Unity games, 2D and 3D", s4d: "Prototypes and small games in C#: platformers, top-down games, simple 3D.",
     s5t: "Tools and apps", s5d: "Desktop apps and websites in Rust, TypeScript and React, and mods for Minecraft.",
     s6t: "C++ programs", s6d: "Fast desktop programs, command-line tools and plugins in C++.",
-    projectsTitle: "A project I am proud of", projectTag: "Open source, MIT",
+    projectsTitle: "Selected work",
+    w1s: "In development", w2s: "In development, placeholder art", w4s: "Private tool",
+    w1d: "A co-op horror game on Roblox where a blind monster hunts only by sound. Everything makes noise: footsteps, doors, chat and even your real voice through the microphone. A lobby with elevators takes friends down together, bottles distract the monster, and there are security cameras and VR support (experimental). A Python generator builds the map and the monster AI is tested offline.",
+    w2d: "A Fabric mod for the end game in the End: Enderite gear, a Void Elytra with a dash, custom enchantments, a new biome with its own wood and food, structures with parkour temples, advancements and a JSON config. A selftest command proves enchantments cannot be abused.",
+    w4d: "A Discord bot that builds a whole server from a description: roles, channels, rules and welcome posts. You get a preview, edit it with buttons and confirm.",
+    projectTag: "Open source, MIT",
     projectDesc: "An independent Minecraft launcher with Java and Bedrock instances, a mod detective, texture and skin editors and automatic updates. All the code is open, so you can see how I work.",
     projectCode: "Code on GitHub", projectSite: "Kairos website",
     howTitle: "How it works",
