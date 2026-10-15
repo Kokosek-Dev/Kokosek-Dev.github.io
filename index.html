@@ -93,6 +93,7 @@
       <div class="card"><h3 data-i18n="s2t"></h3><p data-i18n="s2d"></p></div>
       <div class="card"><h3 data-i18n="s3t"></h3><p data-i18n="s3d"></p></div>
       <div class="card"><h3 data-i18n="s4t"></h3><p data-i18n="s4d"></p></div>
+      <div class="card"><h3 data-i18n="s6t"></h3><p data-i18n="s6d"></p></div>
       <div class="card"><h3 data-i18n="s5t"></h3><p data-i18n="s5d"></p></div>
     </div>
   </div></section>
@@ -131,6 +132,7 @@
             <option value="scraper" data-i18n="o2"></option>
             <option value="roblox" data-i18n="o3"></option>
             <option value="unity" data-i18n="o4"></option>
+            <option value="cpp" data-i18n="o7"></option>
             <option value="tool" data-i18n="o5"></option>
             <option value="other" data-i18n="o6"></option>
           </select>
@@ -159,7 +161,7 @@
   </div></section>
 </main>
 
-<footer><div class="wrap"><span data-i18n="footer"></span> · <a href="https://github.com/Kokosek-Dev">GitHub</a></div></footer>
+<footer><div class="wrap"><span data-i18n="footer"></span> · <a href="https://github.com/Kokosek-Dev">github.com/Kokosek-Dev</a></div></footer>
 
 <script>
 // The id of the Formspree form that delivers the orders. The id is public by design; leave it empty and the form says orders are not open yet.
@@ -169,14 +171,15 @@ const TEXT = {
   pl: {
     navServices: "Co robię", navProjects: "Projekty", navOrder: "Zamów",
     heroTitle1: "Boty, skrypty, gry", heroTitle2: "i narzędzia na zamówienie.",
-    heroLead: "Programuję w Pythonie, Rust i TypeScripcie, robię gry w Roblox Studio i Unity oraz własne narzędzia. Opisz, czego potrzebujesz, a wrócę z wyceną i terminem.",
-    heroOrder: "Zamów coś", heroGithub: "Mój GitHub",
+    heroLead: "Programuję w Pythonie, C++, Rust i TypeScripcie, robię gry w Roblox Studio i Unity oraz własne narzędzia. Opisz, czego potrzebujesz, a wrócę z wyceną i terminem.",
+    heroOrder: "Zamów coś", heroGithub: "Mój profil na GitHubie",
     servicesTitle: "Co mogę zrobić",
     s1t: "Boty i skrypty w Pythonie", s1d: "Boty na Discorda, automatyzacja nudnych rzeczy, małe narzędzia do codziennego użytku.",
     s2t: "Scrapery", s2d: "Zbieranie danych ze stron do pliku (CSV, JSON, Excel). Tylko w zgodzie z regulaminem danej strony.",
     s3t: "Gry w Roblox Studio", s3d: "Mapy, mechaniki, sklepy i systemy w grze w Luau.",
     s4t: "Gry w Unity 2D i 3D", s4d: "Prototypy i małe gry w C#: platformówki, gry top-down, proste 3D.",
     s5t: "Narzędzia i aplikacje", s5d: "Aplikacje na komputer i strony w Rust, TypeScript i React, a do Minecrafta także mody.",
+    s6t: "Programy w C++", s6d: "Szybkie programy na komputer, narzędzia konsolowe i wtyczki w C++.",
     projectsTitle: "Projekt, którym się chwalę", projectTag: "Otwarty kod, MIT",
     projectDesc: "Niezależny launcher Minecrafta z instancjami Java i Bedrock, detektywem modów, edytorem tekstur i skinów oraz automatycznymi aktualizacjami. Cały kod jest otwarty, więc możesz sprawdzić, jak pracuję.",
     projectCode: "Kod na GitHubie", projectSite: "Strona Kairosa",
@@ -192,7 +195,7 @@ const TEXT = {
     fDeadline: "Termin (opcjonalnie)", fDeadlineHint: "np. do końca miesiąca", fBudget: "Budżet (opcjonalnie)", fBudgetHint: "np. do 100 zł",
     fAgree: "Rozumiem, że to zapytanie o wycenę, a nie zakup. Cena i termin są ustalane przed startem, a płatność następuje po wykonaniu.",
     fSafety: "Nigdy nie podawaj tu danych karty ani haseł. Kontakt służy tylko do odpowiedzi na to zapytanie.",
-    fSend: "Wyślij zapytanie", o1: "Bot lub skrypt w Pythonie", o2: "Scraper", o3: "Gra w Roblox Studio", o4: "Gra w Unity", o5: "Narzędzie lub aplikacja", o6: "Coś innego",
+    fSend: "Wyślij zapytanie", o1: "Bot lub skrypt w Pythonie", o2: "Scraper", o3: "Gra w Roblox Studio", o4: "Gra w Unity", o5: "Narzędzie lub aplikacja", o6: "Coś innego", o7: "Program w C++",
     sending: "Wysyłam…", sent: "Dzięki! Zapytanie dotarło, odpiszę na podany kontakt.", failed: "Nie udało się wysłać. Spróbuj za chwilę.",
     closed: "Zamówienia ruszą lada dzień. Zajrzyj tu niedługo.",
     needContact: "Podaj, jak mam się z tobą skontaktować.", needDescription: "Opisz zlecenie trochę dokładniej (przynajmniej kilka zdań).", needAgree: "Zaznacz zgodę poniżej formularza.",
@@ -201,14 +204,15 @@ const TEXT = {
   en: {
     navServices: "What I do", navProjects: "Projects", navOrder: "Order",
     heroTitle1: "Bots, scripts, games", heroTitle2: "and tools made to order.",
-    heroLead: "I code in Python, Rust and TypeScript, make games in Roblox Studio and Unity, and build my own tools. Tell me what you need and I will come back with a price and a deadline.",
-    heroOrder: "Order something", heroGithub: "My GitHub",
+    heroLead: "I code in Python, C++, Rust and TypeScript, make games in Roblox Studio and Unity, and build my own tools. Tell me what you need and I will come back with a price and a deadline.",
+    heroOrder: "Order something", heroGithub: "My GitHub profile",
     servicesTitle: "What I can make",
     s1t: "Python bots and scripts", s1d: "Discord bots, automation of boring chores, small everyday tools.",
     s2t: "Scrapers", s2d: "Collecting data from websites into a file (CSV, JSON, Excel), only in line with each site's terms.",
     s3t: "Roblox Studio games", s3d: "Maps, mechanics, shops and systems in Luau.",
     s4t: "Unity games, 2D and 3D", s4d: "Prototypes and small games in C#: platformers, top-down games, simple 3D.",
     s5t: "Tools and apps", s5d: "Desktop apps and websites in Rust, TypeScript and React, and mods for Minecraft.",
+    s6t: "C++ programs", s6d: "Fast desktop programs, command-line tools and plugins in C++.",
     projectsTitle: "A project I am proud of", projectTag: "Open source, MIT",
     projectDesc: "An independent Minecraft launcher with Java and Bedrock instances, a mod detective, texture and skin editors and automatic updates. All the code is open, so you can see how I work.",
     projectCode: "Code on GitHub", projectSite: "Kairos website",
@@ -224,7 +228,7 @@ const TEXT = {
     fDeadline: "Deadline (optional)", fDeadlineHint: "e.g. by the end of the month", fBudget: "Budget (optional)", fBudgetHint: "e.g. up to 25 EUR",
     fAgree: "I understand this is a request for a quote, not a purchase. Price and deadline are agreed before work starts, and payment comes after delivery.",
     fSafety: "Never enter card details or passwords here. Your contact is only used to answer this request.",
-    fSend: "Send request", o1: "Python bot or script", o2: "Scraper", o3: "Roblox Studio game", o4: "Unity game", o5: "Tool or app", o6: "Something else",
+    fSend: "Send request", o1: "Python bot or script", o2: "Scraper", o3: "Roblox Studio game", o4: "Unity game", o5: "Tool or app", o6: "Something else", o7: "C++ program",
     sending: "Sending…", sent: "Thanks! Your request arrived and I will reply to the contact you gave.", failed: "Could not send it. Please try again in a moment.",
     closed: "Orders open very soon. Check back shortly.",
     needContact: "Tell me how to reach you.", needDescription: "Describe the job in a bit more detail (a few sentences at least).", needAgree: "Tick the agreement below the form.",
@@ -233,7 +237,7 @@ const TEXT = {
 };
 
 const $ = (id) => document.getElementById(id);
-let language = (navigator.language || "pl").toLowerCase().startsWith("pl") ? "pl" : "en";
+let language = "en";
 try { const saved = localStorage.getItem("lang"); if (saved === "pl" || saved === "en") language = saved; } catch { /* storage may be blocked */ }
 
 function apply() {
