@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kokosek-Dev: boty, skrypty, gry i narzędzia na zamówienie</title>
+<meta name="description" content="Boty i skrypty w Pythonie, scrapery, gry w Roblox Studio i Unity oraz własne narzędzia. Opisz, czego potrzebujesz, a wrócę z wyceną.">
+<style>
+  :root {
+    --bg: #0a0f1c; --panel: #111827; --panel-2: #172033; --line: #243049;
+    --text: #e8edf7; --muted: #9aa7bf; --accent: #2da8ff; --accent-2: #19d3b0; --danger: #ff6b6b;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: radial-gradient(900px 500px at 80% -10%, #12315c55, transparent), var(--bg); color: var(--text);
+    font: 16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  a { color: var(--accent); }
+  .wrap { width: min(60rem, calc(100% - 2rem)); margin: 0 auto; }
+  header { position: sticky; top: 0; z-index: 5; backdrop-filter: blur(12px); background: #0a0f1ccc; border-bottom: 1px solid var(--line); }
+  header .wrap { display: flex; align-items: center; gap: 1.25rem; height: 3.5rem; }
+  .brand { font-weight: 800; letter-spacing: .02em; color: var(--text); text-decoration: none; margin-right: auto; }
+  nav a { color: var(--muted); text-decoration: none; font-size: .95rem; }
+  nav a:hover { color: var(--text); }
+  nav { display: flex; gap: 1.25rem; }
+  .lang { background: none; border: 1px solid var(--line); color: var(--muted); border-radius: .5rem; padding: .25rem .6rem; cursor: pointer; font: inherit; font-size: .85rem; }
+  .lang:hover { color: var(--text); border-color: var(--accent); }
+  .hero { padding: 5rem 0 3rem; }
+  h1 { font-size: clamp(2rem, 6vw, 3.4rem); line-height: 1.1; margin: 0 0 1rem; letter-spacing: -.02em; }
+  h1 span { background: linear-gradient(90deg, var(--accent), var(--accent-2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .lead { color: var(--muted); font-size: 1.15rem; max-width: 40rem; }
+  .buttons { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 1.75rem; }
+  .btn { display: inline-block; border: 0; border-radius: .75rem; padding: .8rem 1.3rem; font: inherit; font-weight: 600; cursor: pointer; text-decoration: none; }
+  .btn.primary { background: linear-gradient(90deg, var(--accent), #1b86e6); color: #04121f; }
+  .btn.ghost { background: transparent; border: 1px solid var(--line); color: var(--text); }
+  .btn:hover { filter: brightness(1.1); }
+  .btn:disabled { opacity: .55; cursor: not-allowed; }
+  section { padding: 2.5rem 0; }
+  h2 { font-size: 1.6rem; margin: 0 0 1.25rem; }
+  .grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr)); }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 1rem; padding: 1.25rem; }
+  .card h3 { margin: 0 0 .4rem; font-size: 1.05rem; }
+  .card p { margin: 0; color: var(--muted); font-size: .95rem; }
+  .tag { display: inline-block; font-size: .75rem; color: var(--accent-2); border: 1px solid #19d3b055; border-radius: 99px; padding: .1rem .6rem; margin-bottom: .6rem; }
+  ol.steps { list-style: none; counter-reset: s; padding: 0; margin: 0; display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); }
+  ol.steps li { counter-increment: s; background: var(--panel); border: 1px solid var(--line); border-radius: 1rem; padding: 1.25rem 1.25rem 1.25rem 3.4rem; position: relative; color: var(--muted); }
+  ol.steps li::before { content: counter(s); position: absolute; left: 1.1rem; top: 1.1rem; width: 1.7rem; height: 1.7rem; border-radius: 50%; background: var(--panel-2); color: var(--accent); display: grid; place-items: center; font-weight: 700; }
+  ol.steps strong { display: block; color: var(--text); margin-bottom: .2rem; }
+  form { background: var(--panel); border: 1px solid var(--line); border-radius: 1rem; padding: 1.5rem; display: grid; gap: 1rem; }
+  .row { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); }
+  label { display: grid; gap: .35rem; font-size: .9rem; color: var(--muted); }
+  input, select, textarea { background: var(--bg); border: 1px solid var(--line); border-radius: .6rem; color: var(--text); padding: .65rem .8rem; font: inherit; width: 100%; }
+  input:focus, select:focus, textarea:focus { outline: 2px solid #2da8ff66; border-color: var(--accent); }
+  textarea { min-height: 9rem; resize: vertical; }
+  .check { display: flex; gap: .6rem; align-items: flex-start; }
+  .check input { width: auto; margin-top: .3rem; }
+  .hp { position: absolute; left: -9999px; }
+  .note { font-size: .85rem; color: var(--muted); margin: 0; }
+  .status { margin: 0; padding: .75rem 1rem; border-radius: .6rem; display: none; }
+  .status.ok { display: block; background: #19d3b01f; border: 1px solid #19d3b066; }
+  .status.err { display: block; background: #ff6b6b1f; border: 1px solid #ff6b6b66; color: #ffd0d0; }
+  @media (max-width: 560px) { nav { display: none; } .hero { padding-top: 3rem; } }
+  footer { border-top: 1px solid var(--line); margin-top: 2rem; padding: 1.5rem 0 3rem; color: var(--muted); font-size: .9rem; }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <a class="brand" href="#top">Kokosek-Dev</a>
+    <nav>
+      <a href="#services" data-i18n="navServices"></a>
+      <a href="#projects" data-i18n="navProjects"></a>
+      <a href="#order" data-i18n="navOrder"></a>
+    </nav>
+    <button class="lang" id="lang" type="button" aria-label="Language"></button>
+  </div>
+</header>
+
+<main id="top">
+  <div class="wrap hero">
+    <h1><span data-i18n="heroTitle1"></span> <span data-i18n="heroTitle2"></span></h1>
+    <p class="lead" data-i18n="heroLead"></p>
+    <div class="buttons">
+      <a class="btn primary" href="#order" data-i18n="heroOrder"></a>
+      <a class="btn ghost" href="https://github.com/Kokosek-Dev" data-i18n="heroGithub"></a>
+    </div>
+  </div>
+
+  <section id="services"><div class="wrap">
+    <h2 data-i18n="servicesTitle"></h2>
+    <div class="grid">
+      <div class="card"><h3 data-i18n="s1t"></h3><p data-i18n="s1d"></p></div>
+      <div class="card"><h3 data-i18n="s2t"></h3><p data-i18n="s2d"></p></div>
+      <div class="card"><h3 data-i18n="s3t"></h3><p data-i18n="s3d"></p></div>
+      <div class="card"><h3 data-i18n="s4t"></h3><p data-i18n="s4d"></p></div>
+      <div class="card"><h3 data-i18n="s5t"></h3><p data-i18n="s5d"></p></div>
+    </div>
+  </div></section>
+
+  <section id="projects"><div class="wrap">
+    <h2 data-i18n="projectsTitle"></h2>
+    <div class="card">
+      <span class="tag" data-i18n="projectTag"></span>
+      <h3>Kairos</h3>
+      <p data-i18n="projectDesc"></p>
+      <div class="buttons">
+        <a class="btn ghost" href="https://github.com/Kokosek-Dev/Kairos" data-i18n="projectCode"></a>
+        <a class="btn ghost" href="https://kokosek-dev.github.io/Kairos/" data-i18n="projectSite"></a>
+      </div>
+    </div>
+  </div></section>
+
+  <section id="how"><div class="wrap">
+    <h2 data-i18n="howTitle"></h2>
+    <ol class="steps">
+      <li><strong data-i18n="h1t"></strong><span data-i18n="h1d"></span></li>
+      <li><strong data-i18n="h2t"></strong><span data-i18n="h2d"></span></li>
+      <li><strong data-i18n="h3t"></strong><span data-i18n="h3d"></span></li>
+      <li><strong data-i18n="h4t"></strong><span data-i18n="h4d"></span></li>
+    </ol>
+  </div></section>
+
+  <section id="order"><div class="wrap">
+    <h2 data-i18n="orderTitle"></h2>
+    <form id="form" novalidate>
+      <p class="note" data-i18n="orderIntro"></p>
+      <div class="row">
+        <label><span data-i18n="fType"></span>
+          <select name="type" id="type">
+            <option value="python" data-i18n="o1"></option>
+            <option value="scraper" data-i18n="o2"></option>
+            <option value="roblox" data-i18n="o3"></option>
+            <option value="unity" data-i18n="o4"></option>
+            <option value="tool" data-i18n="o5"></option>
+            <option value="other" data-i18n="o6"></option>
+          </select>
+        </label>
+        <label><span data-i18n="fContact"></span>
+          <input name="contact" id="contact" maxlength="120" autocomplete="off" data-i18n-placeholder="fContactHint">
+        </label>
+      </div>
+      <label><span data-i18n="fDescription"></span>
+        <textarea name="description" id="description" maxlength="4000" data-i18n-placeholder="fDescriptionHint"></textarea>
+      </label>
+      <div class="row">
+        <label><span data-i18n="fDeadline"></span>
+          <input name="deadline" id="deadline" maxlength="80" data-i18n-placeholder="fDeadlineHint">
+        </label>
+        <label><span data-i18n="fBudget"></span>
+          <input name="budget" id="budget" maxlength="80" data-i18n-placeholder="fBudgetHint">
+        </label>
+      </div>
+      <input class="hp" name="_gotcha" id="gotcha" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <label class="check"><input type="checkbox" id="agree"><span data-i18n="fAgree"></span></label>
+      <p class="note" data-i18n="fSafety"></p>
+      <p class="status" id="status" role="status"></p>
+      <div><button class="btn primary" id="send" type="submit" data-i18n="fSend"></button></div>
+    </form>
+  </div></section>
+</main>
+
+<footer><div class="wrap"><span data-i18n="footer"></span> · <a href="https://github.com/Kokosek-Dev">GitHub</a></div></footer>
+
+<script>
+// The id of the Formspree form that delivers the orders. The id is public by design; leave it empty and the form says orders are not open yet.
+const FORM_ID = "";
+
+const TEXT = {
+  pl: {
+    navServices: "Co robię", navProjects: "Projekty", navOrder: "Zamów",
+    heroTitle1: "Boty, skrypty, gry", heroTitle2: "i narzędzia na zamówienie.",
+    heroLead: "Programuję w Pythonie, Rust i TypeScripcie, robię gry w Roblox Studio i Unity oraz własne narzędzia. Opisz, czego potrzebujesz, a wrócę z wyceną i terminem.",
+    heroOrder: "Zamów coś", heroGithub: "Mój GitHub",
+    servicesTitle: "Co mogę zrobić",
+    s1t: "Boty i skrypty w Pythonie", s1d: "Boty na Discorda, automatyzacja nudnych rzeczy, małe narzędzia do codziennego użytku.",
+    s2t: "Scrapery", s2d: "Zbieranie danych ze stron do pliku (CSV, JSON, Excel). Tylko w zgodzie z regulaminem danej strony.",
+    s3t: "Gry w Roblox Studio", s3d: "Mapy, mechaniki, sklepy i systemy w grze w Luau.",
+    s4t: "Gry w Unity 2D i 3D", s4d: "Prototypy i małe gry w C#: platformówki, gry top-down, proste 3D.",
+    s5t: "Narzędzia i aplikacje", s5d: "Aplikacje na komputer i strony w Rust, TypeScript i React, a do Minecrafta także mody.",
+    projectsTitle: "Projekt, którym się chwalę", projectTag: "Otwarty kod, MIT",
+    projectDesc: "Niezależny launcher Minecrafta z instancjami Java i Bedrock, detektywem modów, edytorem tekstur i skinów oraz automatycznymi aktualizacjami. Cały kod jest otwarty, więc możesz sprawdzić, jak pracuję.",
+    projectCode: "Kod na GitHubie", projectSite: "Strona Kairosa",
+    howTitle: "Jak to działa",
+    h1t: "Opisujesz", h1d: "Wypełniasz formularz poniżej: co ma robić i do kiedy.",
+    h2t: "Wycena", h2d: "Odpisuję z ceną i terminem. Jeśli ci nie pasuje, nic się nie dzieje.",
+    h3t: "Robię", h3d: "Pracuję nad tym i pokazuję postęp, zanim skończę.",
+    h4t: "Płacisz po wykonaniu", h4d: "Najpierw dostajesz gotową rzecz, potem płacisz. Sposób płatności ustalamy w wiadomości.",
+    orderTitle: "Zamów coś",
+    orderIntro: "Najlepiej sprawdzają się rzeczy proste i jasno opisane. Większe projekty też biorę, ale wtedy wycena jest osobna i dłuższa.",
+    fType: "Co chcesz zamówić?", fContact: "Jak się z tobą skontaktować?", fContactHint: "e-mail albo nazwa na Discordzie",
+    fDescription: "Opisz, co ma robić", fDescriptionHint: "Im dokładniej, tym lepsza wycena. Co ma się dziać, kto z tego korzysta, czy masz przykład?",
+    fDeadline: "Termin (opcjonalnie)", fDeadlineHint: "np. do końca miesiąca", fBudget: "Budżet (opcjonalnie)", fBudgetHint: "np. do 100 zł",
+    fAgree: "Rozumiem, że to zapytanie o wycenę, a nie zakup. Cena i termin są ustalane przed startem, a płatność następuje po wykonaniu.",
+    fSafety: "Nigdy nie podawaj tu danych karty ani haseł. Kontakt służy tylko do odpowiedzi na to zapytanie.",
+    fSend: "Wyślij zapytanie", o1: "Bot lub skrypt w Pythonie", o2: "Scraper", o3: "Gra w Roblox Studio", o4: "Gra w Unity", o5: "Narzędzie lub aplikacja", o6: "Coś innego",
+    sending: "Wysyłam…", sent: "Dzięki! Zapytanie dotarło, odpiszę na podany kontakt.", failed: "Nie udało się wysłać. Spróbuj za chwilę.",
+    closed: "Zamówienia ruszą lada dzień. Zajrzyj tu niedługo.",
+    needContact: "Podaj, jak mam się z tobą skontaktować.", needDescription: "Opisz zlecenie trochę dokładniej (przynajmniej kilka zdań).", needAgree: "Zaznacz zgodę poniżej formularza.",
+    footer: "Zlecenia na boty, skrypty, gry i narzędzia",
+  },
+  en: {
+    navServices: "What I do", navProjects: "Projects", navOrder: "Order",
+    heroTitle1: "Bots, scripts, games", heroTitle2: "and tools made to order.",
+    heroLead: "I code in Python, Rust and TypeScript, make games in Roblox Studio and Unity, and build my own tools. Tell me what you need and I will come back with a price and a deadline.",
+    heroOrder: "Order something", heroGithub: "My GitHub",
+    servicesTitle: "What I can make",
+    s1t: "Python bots and scripts", s1d: "Discord bots, automation of boring chores, small everyday tools.",
+    s2t: "Scrapers", s2d: "Collecting data from websites into a file (CSV, JSON, Excel), only in line with each site's terms.",
+    s3t: "Roblox Studio games", s3d: "Maps, mechanics, shops and systems in Luau.",
+    s4t: "Unity games, 2D and 3D", s4d: "Prototypes and small games in C#: platformers, top-down games, simple 3D.",
+    s5t: "Tools and apps", s5d: "Desktop apps and websites in Rust, TypeScript and React, and mods for Minecraft.",
+    projectsTitle: "A project I am proud of", projectTag: "Open source, MIT",
+    projectDesc: "An independent Minecraft launcher with Java and Bedrock instances, a mod detective, texture and skin editors and automatic updates. All the code is open, so you can see how I work.",
+    projectCode: "Code on GitHub", projectSite: "Kairos website",
+    howTitle: "How it works",
+    h1t: "You describe", h1d: "Fill in the form below: what it should do and by when.",
+    h2t: "Quote", h2d: "I reply with a price and a deadline. If it does not suit you, nothing happens.",
+    h3t: "I build", h3d: "I work on it and show progress before I am done.",
+    h4t: "You pay when it is done", h4d: "You get the finished thing first and pay afterwards. We agree on how to pay in the message.",
+    orderTitle: "Order something",
+    orderIntro: "Simple, clearly described things work best. I take bigger projects too, but those get a separate, longer quote.",
+    fType: "What do you want?", fContact: "How can I reach you?", fContactHint: "e-mail or Discord name",
+    fDescription: "Describe what it should do", fDescriptionHint: "The more detail, the better the quote. What should happen, who uses it, do you have an example?",
+    fDeadline: "Deadline (optional)", fDeadlineHint: "e.g. by the end of the month", fBudget: "Budget (optional)", fBudgetHint: "e.g. up to 25 EUR",
+    fAgree: "I understand this is a request for a quote, not a purchase. Price and deadline are agreed before work starts, and payment comes after delivery.",
+    fSafety: "Never enter card details or passwords here. Your contact is only used to answer this request.",
+    fSend: "Send request", o1: "Python bot or script", o2: "Scraper", o3: "Roblox Studio game", o4: "Unity game", o5: "Tool or app", o6: "Something else",
+    sending: "Sending…", sent: "Thanks! Your request arrived and I will reply to the contact you gave.", failed: "Could not send it. Please try again in a moment.",
+    closed: "Orders open very soon. Check back shortly.",
+    needContact: "Tell me how to reach you.", needDescription: "Describe the job in a bit more detail (a few sentences at least).", needAgree: "Tick the agreement below the form.",
+    footer: "Bots, scripts, games and tools made to order",
+  },
+};
+
+const $ = (id) => document.getElementById(id);
+let language = (navigator.language || "pl").toLowerCase().startsWith("pl") ? "pl" : "en";
+try { const saved = localStorage.getItem("lang"); if (saved === "pl" || saved === "en") language = saved; } catch { /* storage may be blocked */ }
+
+function apply() {
+  const words = TEXT[language];
+  document.documentElement.lang = language;
+  document.querySelectorAll("[data-i18n]").forEach((node) => { node.textContent = words[node.dataset.i18n]; });
+  document.querySelectorAll("[data-i18n-placeholder]").forEach((node) => { node.placeholder = words[node.dataset.i18nPlaceholder]; });
+  $("lang").textContent = language === "pl" ? "EN" : "PL";
+  $("send").disabled = !FORM_ID;
+  if (!FORM_ID) show(words.closed, "err");
+}
+
+function show(message, kind) {
+  const box = $("status");
+  box.textContent = message;
+  box.className = "status " + kind;
+}
+
+$("lang").addEventListener("click", () => {
+  language = language === "pl" ? "en" : "pl";
+  try { localStorage.setItem("lang", language); } catch { /* storage may be blocked */ }
+  apply();
+});
+
+const looksLikeEmail = (text) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(text);
+
+$("form").addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const words = TEXT[language];
+  if (!FORM_ID) return show(words.closed, "err");
+  const contact = $("contact").value.trim();
+  const description = $("description").value.trim();
+  if ($("gotcha").value) return;
+  if (!contact) return show(words.needContact, "err");
+  if (description.length < 30) return show(words.needDescription, "err");
+  if (!$("agree").checked) return show(words.needAgree, "err");
+
+  const type = $("type").selectedOptions[0].textContent;
+  const body = { _subject: "[Zlecenie] " + type, type, contact, description, deadline: $("deadline").value.trim(), budget: $("budget").value.trim() };
+  if (looksLikeEmail(contact)) body.email = contact;
+
+  $("send").disabled = true;
+  show(words.sending, "ok");
+  try {
+    const response = await fetch("https://formspree.io/f/" + FORM_ID, { method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" }, body: JSON.stringify(body) });
+    if (!response.ok) throw new Error(String(response.status));
+    event.target.reset();
+    show(words.sent, "ok");
+  } catch {
+    show(words.failed, "err");
+  } finally {
+    $("send").disabled = false;
+  }
+});
+
+apply();
+</script>
+</body>
+</html>
