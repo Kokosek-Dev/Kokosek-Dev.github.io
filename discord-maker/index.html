@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="pl">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Discord Maker | Kokosek-Dev</title>
-<meta name="description" content="Opisz serwer Discord, zobacz podgląd i pozwól botowi zbudować go od zera: kanały, role, weryfikacja i onboarding.">
+<meta name="description" content="Describe a Discord server, preview it, and let the bot build it from scratch: channels, roles, verification and onboarding.">
 <style>
   :root {
     --bg: #0a0f1c; --panel: #111827; --panel-2: #172033; --line: #243049;
@@ -108,37 +108,37 @@
 
 <main class="wrap">
   <h1>Discord <span>Maker</span></h1>
-  <p class="lead">Opisz swój serwer, zobacz podgląd i popraw go, a bot zbuduje go od zera: kanały, role, weryfikację i onboarding. Potem sam wyjdzie z serwera. Za darmo.</p>
+  <p class="lead">Describe your server, preview it and tweak it, and the bot builds it from scratch: channels, roles, verification and onboarding. Then it leaves your server on its own. Free.</p>
 
   <!-- KROK 1 -->
   <section class="card" id="s-auth">
-    <h2><span class="step-n">1</span>Zweryfikuj się</h2>
-    <p class="muted">Podaj swoje ID konta Discord (Ustawienia → Zaawansowane → Tryb dewelopera, potem PPM na swoim profilu → Kopiuj ID użytkownika). Bot wyśle Ci kod w wiadomości prywatnej. <span id="home-hint" class="hidden">Żeby bot mógł do Ciebie napisać, <a id="home-link" target="_blank" rel="noopener">dołącz do serwera z botem</a>.</span></p>
+    <h2><span class="step-n">1</span>Verify yourself</h2>
+    <p class="muted">Enter your Discord user ID (Settings → Advanced → Developer Mode, then right-click your profile → Copy User ID). The bot will send you a code in a direct message. <span id="home-hint" class="hidden"><a id="home-link" target="_blank" rel="noopener">Join my Discord</a> if you have trouble receiving it.</span></p>
     <div class="row">
-      <label>Twoje ID Discord<input id="user-id" inputmode="numeric" placeholder="np. 123456789012345678"></label>
-      <button class="btn primary" id="send-code">Wyślij kod</button>
+      <label>Your Discord user ID<input id="user-id" inputmode="numeric" placeholder="e.g. 123456789012345678"></label>
+      <button class="btn primary" id="send-code">Send code</button>
     </div>
     <div class="row hidden" id="code-row" style="margin-top:.8rem">
-      <label>Kod z wiadomości prywatnej<input id="code" inputmode="numeric" maxlength="6" placeholder="123456"></label>
-      <button class="btn primary" id="verify">Potwierdź</button>
+      <label>Code from the direct message<input id="code" inputmode="numeric" maxlength="6" placeholder="123456"></label>
+      <button class="btn primary" id="verify">Confirm</button>
     </div>
     <p class="status" id="auth-status"></p>
   </section>
 
   <!-- KROK 2 -->
   <section class="card hidden" id="s-form">
-    <h2><span class="step-n">2</span>Opisz serwer</h2>
-    <p class="muted">Zostało użyć: <b id="uses-left">-</b>. Podgląd jest nieograniczony, limit zużywa dopiero budowa.</p>
+    <h2><span class="step-n">2</span>Describe your server</h2>
+    <p class="muted">Builds left: <b id="uses-left">-</b>. Previews are unlimited, only a build uses one.</p>
     <div class="grid2">
-      <label>Opis serwera (temat, styl, role, czego potrzebujesz)
-        <textarea id="prompt" maxlength="1500" placeholder="np. Serwer dla mojej społeczności graczy Minecraft: ogłoszenia, czat, pomoc, kanały głosowe, role dla moderatorów, ciemny klimat."></textarea>
+      <label>Server description (theme, style, roles, what you need)
+        <textarea id="prompt" maxlength="1500" placeholder="e.g. A server for my Minecraft community: announcements, chat, help, voice channels, moderator roles, dark vibe."></textarea>
       </label>
       <div>
-        <label>ID serwera, który ma zostać przebudowany
-          <input id="guild-id" inputmode="numeric" placeholder="PPM na serwerze → Kopiuj ID serwera">
+        <label>ID of the server to rebuild
+          <input id="guild-id" inputmode="numeric" placeholder="Right-click the server → Copy Server ID">
         </label>
-        <p class="muted" style="margin-top:.6rem">Musisz mieć na nim Administratora. Bot musi mieć na tym serwerze najwyższą rolę.</p>
-        <button class="btn primary" id="gen">Generuj podgląd</button>
+        <p class="muted" style="margin-top:.6rem">You need Administrator on it. The bot must have the highest role on that server.</p>
+        <button class="btn primary" id="gen">Generate preview</button>
       </div>
     </div>
     <p class="status" id="form-status"></p>
@@ -146,25 +146,25 @@
 
   <!-- KROK 3 -->
   <section class="card hidden" id="s-preview">
-    <h2><span class="step-n">3</span>Podgląd i edycja</h2>
-    <p class="muted">Kliknij kanał albo kategorię, żeby ją edytować (nazwy, emoji, widoczność, wiadomości). Zakładki pokazują role i onboarding. To jest dokładnie to, co powstanie na serwerze.</p>
+    <h2><span class="step-n">3</span>Preview and edit</h2>
+    <p class="muted">Click a channel or category to edit it (names, emoji, visibility, messages). The tabs show roles and onboarding. This is exactly what will be created on the server.</p>
     <div id="preview"></div>
     <div class="row" style="margin-top:1rem">
-      <label>Chcesz większej zmiany? Napisz do AI (np. „dodaj sekcję na turnieje, zmień motyw na cyberpunk”)
+      <label>Want a bigger change? Tell the AI (e.g. "add a tournaments section, switch to a cyberpunk theme")
         <input id="remark" maxlength="600">
       </label>
-      <button class="btn ghost" id="revise">Popraw przez AI</button>
+      <button class="btn ghost" id="revise">Revise with AI</button>
     </div>
     <p class="status" id="preview-status"></p>
   </section>
 
   <!-- KROK 4 -->
   <section class="card hidden" id="s-build">
-    <h2><span class="step-n">4</span>Zbuduj na Discordzie</h2>
-    <p class="muted">Dodaj bota na swój serwer jako administrator, a potem zatwierdź. Bot wyśle Ci wiadomość prywatną po zakończeniu i sam wyjdzie z serwera.</p>
-    <p><a class="btn ghost" id="invite" target="_blank" rel="noopener">1. Dodaj bota na serwer</a></p>
-    <label class="check"><input type="checkbox" id="confirm"><span><b>Rozumiem, że zatwierdzenie USUNIE WSZYSTKO na tym serwerze</b> (kanały, role, emotki, dźwięki) i zbuduje go od nowa według podglądu. Tego nie da się cofnąć.</span></label>
-    <p style="margin-top:1rem"><button class="btn danger" id="build" disabled>2. Zatwierdź i zbuduj</button></p>
+    <h2><span class="step-n">4</span>Build on Discord</h2>
+    <p class="muted">Add the bot to your server as an administrator, then confirm. The bot sends you a direct message when it is done and leaves the server by itself.</p>
+    <p><a class="btn ghost" id="invite" target="_blank" rel="noopener">1. Add the bot to your server</a></p>
+    <label class="check"><input type="checkbox" id="confirm"><span><b>I understand that confirming will DELETE EVERYTHING on this server</b> (channels, roles, emojis, sounds) and rebuild it from the preview. This cannot be undone.</span></label>
+    <p style="margin-top:1rem"><button class="btn danger" id="build" disabled>2. Confirm and build</button></p>
     <div id="progress" class="hidden">
       <div class="bar"><div id="bar"></div></div>
       <p class="muted" id="progress-msg" style="margin-top:.5rem"></p>
@@ -173,7 +173,7 @@
   </section>
 </main>
 
-<footer><div class="wrap">Darmowe, 2 budowy na IP. Bot nie zapisuje niczego z Twojego serwera i wychodzi po zakończeniu. Zrobione przez <a href="https://github.com/Kokosek-Dev">Kokosek-Dev</a>.</div></footer>
+<footer><div class="wrap">Free, 2 builds per IP. The bot stores nothing from your server and leaves when it is done. Made by <a href="https://github.com/Kokosek-Dev">Kokosek-Dev</a>.</div></footer>
 
 <script>
 const API = (window.CONFIG && window.CONFIG.API_BASE || "").replace(/\/$/, "");
@@ -187,7 +187,7 @@ async function api(path, body) {
   try { data = await r.json(); } catch (e) {}
   if (!r.ok) {
     const d = data.detail;
-    throw new Error((d && d.message) || (typeof d === "string" ? d : "") || "Błąd " + r.status);
+    throw new Error((d && d.message) || (typeof d === "string" ? d : "") || "Error " + r.status);
   }
   return data;
 }
@@ -202,7 +202,7 @@ function slug(s) { s = String(s || "").toLowerCase().trim().replace(/[^\w\- ]/g,
 function chDisplay(ch) { return ch.type === "voice" ? (ch.emoji ? ch.emoji + " " : "") + ch.name : (ch.emoji ? ch.emoji + "｜" : "") + ch.name; }
 function catDisplay(c) { return (c.emoji ? c.emoji + " " : "") + c.name.toUpperCase(); }
 const ICON = { text: "#", voice: "🔊", announcement: "📢", forum: "💬" };
-const VIS_LABEL = { inherit: "jak kategoria", public: "publiczny", verified: "po weryfikacji", staff: "tylko staff" };
+const VIS_LABEL = { inherit: "same as category", public: "public", verified: "after verification", staff: "staff only" };
 const lock = (v) => (v === "verified" ? " 🔒" : v === "staff" ? " 🛡️" : "");
 
 // ---------- krok 1: weryfikacja ----------
@@ -211,34 +211,34 @@ const lock = (v) => (v === "verified" ? " 🔒" : v === "staff" ? " 🛡️" : "
     cfg = await api("/api/config");
     $("invite").href = cfg.bot_invite;
     if (cfg.home_invite) { $("home-link").href = cfg.home_invite; $("home-hint").classList.remove("hidden"); }
-  } catch (e) { say("auth-status", "err", "Backend jest niedostępny. Spróbuj później."); }
+  } catch (e) { say("auth-status", "err", "The backend is unavailable right now. Please try again later."); }
   try { token = sessionStorage.getItem("dm_token") || ""; if (token) { $("s-auth").classList.add("hidden"); $("s-form").classList.remove("hidden"); $("uses-left").textContent = "?"; } } catch (e) {}
 })();
 
 $("send-code").onclick = async () => {
-  const b = $("send-code"); busy(b, true, "Wysyłam…"); say("auth-status", "");
+  const b = $("send-code"); busy(b, true, "Sending…"); say("auth-status", "");
   try {
     await api("/api/auth/start", { user_id: $("user-id").value.trim() });
     $("code-row").classList.remove("hidden");
-    say("auth-status", "ok", "Kod wysłany w wiadomości prywatnej na Discordzie. Wpisz go poniżej.");
+    say("auth-status", "ok", "Code sent as a direct message on Discord. Enter it below.");
   } catch (e) { say("auth-status", "err", e.message); }
   busy(b, false);
 };
 $("verify").onclick = async () => {
-  const b = $("verify"); busy(b, true, "Sprawdzam…");
+  const b = $("verify"); busy(b, true, "Checking…");
   try {
     const r = await api("/api/auth/verify", { user_id: $("user-id").value.trim(), code: $("code").value.trim() });
     token = r.token; try { sessionStorage.setItem("dm_token", token); } catch (e) {}
-    $("uses-left").textContent = r.uses_left === null ? "bez limitu" : r.uses_left;
+    $("uses-left").textContent = r.uses_left === null ? "unlimited" : r.uses_left;
     $("s-auth").classList.add("hidden"); $("s-form").classList.remove("hidden");
   } catch (e) { say("auth-status", "err", e.message); }
   busy(b, false);
 };
 
 // ---------- krok 2: generowanie ----------
-function needLogin(e) { if (/Sesja wygas/.test(e.message)) { token = ""; try { sessionStorage.removeItem("dm_token"); } catch (x) {} $("s-auth").classList.remove("hidden"); $("s-form").classList.add("hidden"); } }
+function needLogin(e) { if (/Session expired/.test(e.message)) { token = ""; try { sessionStorage.removeItem("dm_token"); } catch (x) {} $("s-auth").classList.remove("hidden"); $("s-form").classList.add("hidden"); } }
 $("gen").onclick = async () => {
-  const b = $("gen"); busy(b, true, "AI projektuje… (do 2 min)"); say("form-status", "info", "AI projektuje Twój serwer, to może potrwać chwilę…");
+  const b = $("gen"); busy(b, true, "AI is designing… (up to 2 min)"); say("form-status", "info", "The AI is designing your server, this can take a moment…");
   try {
     lastPrompt = $("prompt").value;
     const r = await api("/api/preview", { token, guild_id: $("guild-id").value.trim(), prompt: lastPrompt });
@@ -251,10 +251,10 @@ $("gen").onclick = async () => {
 };
 $("revise").onclick = async () => {
   const remark = $("remark").value.trim(); if (!remark) return;
-  const b = $("revise"); busy(b, true, "AI poprawia…"); say("preview-status", "info", "AI nanosi zmiany…");
+  const b = $("revise"); busy(b, true, "AI is revising…"); say("preview-status", "info", "The AI is applying your changes…");
   try {
     const r = await api("/api/revise", { token, prompt: lastPrompt, blueprint: bp, remark });
-    bp = r.blueprint; sel = { kind: "channel", ci: 0, hi: 0 }; $("remark").value = ""; say("preview-status", "ok", "Zmiany naniesione."); render();
+    bp = r.blueprint; sel = { kind: "channel", ci: 0, hi: 0 }; $("remark").value = ""; say("preview-status", "ok", "Changes applied."); render();
   } catch (e) { say("preview-status", "err", e.message); needLogin(e); }
   busy(b, false);
 };
@@ -265,17 +265,17 @@ function render() {
   const side = bp.categories.map((c, ci) => `
     <div class="dc-cat ${sel.kind === "category" && sel.ci === ci ? "sel" : ""}" data-cat="${ci}"><span>⌄ ${esc(catDisplay(c))}${lock(c.visibility)}</span></div>
     ${c.channels.map((h, hi) => `<div class="dc-ch ${sel.kind === "channel" && sel.ci === ci && sel.hi === hi ? "sel" : ""}" data-ch="${ci}:${hi}"><i>${ICON[h.type]}</i>${esc(chDisplay(h))}${lock(h.visibility === "inherit" ? "" : h.visibility)}</div>`).join("")}
-    <button class="dc-add" data-addch="${ci}">+ kanał</button>`).join("");
+    <button class="dc-add" data-addch="${ci}">+ channel</button>`).join("");
   const ch = curCh();
   const msgs = ch ? ch.messages.map((m) => `
-    <div class="dc-msg"><div class="dc-av">DM</div><div><div><span class="dc-name">Discord Maker</span><span class="dc-tag">APL.</span> ${m.pin ? '<span class="dc-pin">📌 przypięte</span>' : ""}</div>
+    <div class="dc-msg"><div class="dc-av">DM</div><div><div><span class="dc-name">Discord Maker</span><span class="dc-tag">APL.</span> ${m.pin ? '<span class="dc-pin">📌 pinned</span>' : ""}</div>
     <div class="dc-body">${md(m.content)}</div>
     ${m.embed ? `<div class="dc-embed" style="border-color:${esc(m.embed.color)}"><b>${esc(m.embed.title)}</b><div class="dc-body">${md(m.embed.description)}</div></div>` : ""}</div></div>`).join("") : "";
   const head = ch ? `<span>${ICON[ch.type]} ${esc(chDisplay(ch))}</span><small>${esc(ch.topic || "")}</small>` : `<span>${esc(bp.server_name)}</span>`;
   $("preview").innerHTML = `<div class="dc">
-    <div class="dc-side"><div class="dc-server">${"🧩"} <input id="srv-name" value="${esc(bp.server_name)}" maxlength="100"></div>${side}<button class="dc-add" data-addcat>+ kategoria</button></div>
-    <div class="dc-main"><div class="dc-head">${head}</div><div class="dc-msgs">${msgs || '<div class="dc-empty">Ten kanał nie ma wiadomości startowych.</div>'}</div></div>
-    <div class="dc-edit"><div class="tabs">${["channels:Kanały", "roles:Role", "onboarding:Onboarding"].map((t) => { const [k, n] = t.split(":"); return `<button class="tab ${tab === k ? "on" : ""}" data-tab="${k}">${n}</button>`; }).join("")}</div>${editor()}</div>
+    <div class="dc-side"><div class="dc-server">${"🧩"} <input id="srv-name" value="${esc(bp.server_name)}" maxlength="100"></div>${side}<button class="dc-add" data-addcat>+ category</button></div>
+    <div class="dc-main"><div class="dc-head">${head}</div><div class="dc-msgs">${msgs || '<div class="dc-empty">This channel has no starter messages.</div>'}</div></div>
+    <div class="dc-edit"><div class="tabs">${["channels:Channels", "roles:Roles", "onboarding:Onboarding"].map((t) => { const [k, n] = t.split(":"); return `<button class="tab ${tab === k ? "on" : ""}" data-tab="${k}">${n}</button>`; }).join("")}</div>${editor()}</div>
   </div>`;
   bindPreview();
 }
@@ -286,34 +286,34 @@ function sel_vis(id, val, withInherit) {
 }
 function editor() {
   if (tab === "roles") {
-    return `<h4>Role</h4>${bp.roles.map((r, i) => `<div class="role-row"><input type="color" data-rcolor="${i}" value="${r.color}"><input type="text" data-rname="${i}" value="${esc(r.name)}" maxlength="100">
-      <button class="btn ghost small" data-rdel="${i}" ${r.kind === "verified" ? "disabled title='Rola weryfikacji'" : ""}>✕</button></div>
-      <div class="muted" style="margin:-.2rem 0 .5rem;color:var(--dc-muted);font-size:.75rem">${esc(r.kind)}${r.kind === "verified" ? " · dostają ją wszyscy po weryfikacji" : ""}</div>`).join("")}
-      <button class="btn ghost small" id="add-role">+ rola</button>`;
+    return `<h4>Roles</h4>${bp.roles.map((r, i) => `<div class="role-row"><input type="color" data-rcolor="${i}" value="${r.color}"><input type="text" data-rname="${i}" value="${esc(r.name)}" maxlength="100">
+      <button class="btn ghost small" data-rdel="${i}" ${r.kind === "verified" ? "disabled title='Verification role'" : ""}>✕</button></div>
+      <div class="muted" style="margin:-.2rem 0 .5rem;color:var(--dc-muted);font-size:.75rem">${esc(r.kind)}${r.kind === "verified" ? " · everyone gets it after verifying" : ""}</div>`).join("")}
+      <button class="btn ghost small" id="add-role">+ role</button>`;
   }
   if (tab === "onboarding") {
-    return `<h4>Onboarding</h4><div class="ob-card" style="border:1px solid #4e5058"><b>(zawsze) ${esc(bp.language === "pl" ? "Regulamin" : "Rules")}</b>Akceptacja daje rolę <span class="ob-opt">${esc(bp.verified_role)}</span> i odblokowuje resztę serwera.</div>` +
+    return `<h4>Onboarding</h4><div class="ob-card" style="border:1px solid #4e5058"><b>(always) Rules</b>Accepting gives the role <span class="ob-opt">${esc(bp.verified_role)}</span> and unlocks the rest of the server.</div>` +
       bp.onboarding.prompts.map((p, pi) => `<div class="ob-card"><b>${esc(p.title)}</b>${p.options.map((o) => `<span class="ob-opt">${esc(o.emoji)} ${esc(o.title)}</span>`).join("")}
-      <div style="margin-top:.4rem"><button class="btn ghost small" data-pdel="${pi}">Usuń pytanie</button></div></div>`).join("");
+      <div style="margin-top:.4rem"><button class="btn ghost small" data-pdel="${pi}">Remove question</button></div></div>`).join("");
   }
   if (sel.kind === "category") {
     const c = bp.categories[sel.ci];
-    return `<h4>Kategoria</h4><label>Nazwa<input id="e-name" value="${esc(c.name)}" maxlength="80"></label>
+    return `<h4>Category</h4><label>Name<input id="e-name" value="${esc(c.name)}" maxlength="80"></label>
       <label>Emoji<input id="e-emoji" value="${esc(c.emoji)}" maxlength="8"></label>
-      <label>Widoczność${sel_vis("e-vis", c.visibility, false)}</label>
-      <button class="btn danger small" id="del-cat">Usuń kategorię</button>`;
+      <label>Visibility${sel_vis("e-vis", c.visibility, false)}</label>
+      <button class="btn danger small" id="del-cat">Delete category</button>`;
   }
-  const h = curCh(); if (!h) return `<h4>Kanał</h4><p class="muted">Wybierz kanał.</p>`;
-  return `<h4>Kanał</h4><label>Nazwa<input id="e-name" value="${esc(h.name)}" maxlength="90"></label>
+  const h = curCh(); if (!h) return `<h4>Channel</h4><p class="muted">Select a channel.</p>`;
+  return `<h4>Channel</h4><label>Name<input id="e-name" value="${esc(h.name)}" maxlength="90"></label>
     <label>Emoji<input id="e-emoji" value="${esc(h.emoji)}" maxlength="8"></label>
-    <label>Typ<select id="e-type">${["text", "voice", "announcement", "forum"].map((t) => `<option ${t === h.type ? "selected" : ""}>${t}</option>`).join("")}</select></label>
-    <label>Widoczność${sel_vis("e-vis", h.visibility, true)}</label>
-    ${h.type !== "voice" ? `<label>Opis kanału<input id="e-topic" value="${esc(h.topic)}" maxlength="1000"></label>
-    <label class="check" style="color:var(--dc-text)"><input type="checkbox" id="e-ro" ${h.readonly ? "checked" : ""}> Tylko do czytania</label>` : ""}
-    ${h.type === "text" || h.type === "announcement" ? `<h4 style="margin-top:.8rem">Wiadomości startowe</h4>${h.messages.map((m, i) => `<label>Treść<textarea data-mc="${i}">${esc(m.content)}</textarea></label>
-      <label class="check" style="color:var(--dc-text)"><input type="checkbox" data-mp="${i}" ${m.pin ? "checked" : ""}> Przypnij</label><button class="btn ghost small" data-md="${i}">Usuń wiadomość</button><hr style="border-color:#1e1f22">`).join("")}
-      ${h.messages.length < 3 ? '<button class="btn ghost small" id="add-msg">+ wiadomość</button>' : ""}` : ""}
-    <p style="margin-top:.8rem"><button class="btn danger small" id="del-ch">Usuń kanał</button></p>`;
+    <label>Type<select id="e-type">${["text", "voice", "announcement", "forum"].map((t) => `<option ${t === h.type ? "selected" : ""}>${t}</option>`).join("")}</select></label>
+    <label>Visibility${sel_vis("e-vis", h.visibility, true)}</label>
+    ${h.type !== "voice" ? `<label>Channel topic<input id="e-topic" value="${esc(h.topic)}" maxlength="1000"></label>
+    <label class="check" style="color:var(--dc-text)"><input type="checkbox" id="e-ro" ${h.readonly ? "checked" : ""}> Read-only</label>` : ""}
+    ${h.type === "text" || h.type === "announcement" ? `<h4 style="margin-top:.8rem">Starter messages</h4>${h.messages.map((m, i) => `<label>Content<textarea data-mc="${i}">${esc(m.content)}</textarea></label>
+      <label class="check" style="color:var(--dc-text)"><input type="checkbox" data-mp="${i}" ${m.pin ? "checked" : ""}> Pin</label><button class="btn ghost small" data-md="${i}">Delete message</button><hr style="border-color:#1e1f22">`).join("")}
+      ${h.messages.length < 3 ? '<button class="btn ghost small" id="add-msg">+ message</button>' : ""}` : ""}
+    <p style="margin-top:.8rem"><button class="btn danger small" id="del-ch">Delete channel</button></p>`;
 }
 
 function renameRefs(kind, from, to) {
@@ -334,13 +334,13 @@ function bindPreview() {
   P.querySelectorAll("[data-cat]").forEach((el) => (el.onclick = () => { sel = { kind: "category", ci: +el.dataset.cat }; tab = "channels"; render(); }));
   P.querySelectorAll("[data-ch]").forEach((el) => (el.onclick = () => { const [ci, hi] = el.dataset.ch.split(":").map(Number); sel = { kind: "channel", ci, hi }; tab = "channels"; render(); }));
   P.querySelectorAll("[data-addch]").forEach((el) => (el.onclick = () => {
-    const ci = +el.dataset.addch, c = bp.categories[ci]; let n = "nowy-kanal", i = 2; const used = allSlugs();
-    while (used.has(n)) n = "nowy-kanal-" + i++;
+    const ci = +el.dataset.addch, c = bp.categories[ci]; let n = "new-channel", i = 2; const used = allSlugs();
+    while (used.has(n)) n = "new-channel-" + i++;
     c.channels.push({ name: n, emoji: "💬", type: "text", topic: "", visibility: "inherit", readonly: false, messages: [] });
     sel = { kind: "channel", ci, hi: c.channels.length - 1 }; tab = "channels"; render();
   }));
   const addCat = P.querySelector("[data-addcat]");
-  addCat.onclick = () => { bp.categories.push({ name: "Nowa kategoria", emoji: "📁", visibility: "public", channels: [] }); sel = { kind: "category", ci: bp.categories.length - 1 }; tab = "channels"; render(); };
+  addCat.onclick = () => { bp.categories.push({ name: "New category", emoji: "📁", visibility: "public", channels: [] }); sel = { kind: "category", ci: bp.categories.length - 1 }; tab = "channels"; render(); };
   P.querySelectorAll("[data-tab]").forEach((el) => (el.onclick = () => { tab = el.dataset.tab; render(); }));
 
   if (tab === "roles") {
@@ -356,7 +356,7 @@ function bindPreview() {
       render();
     }));
     const ar = P.querySelector("#add-role");
-    if (ar) ar.onclick = () => { let n = "Nowa rola", i = 2; while (bp.roles.some((r) => r.name === n)) n = "Nowa rola " + i++; bp.roles.push({ name: n, color: "#5865f2", kind: "cosmetic", hoist: false, mentionable: false }); render(); };
+    if (ar) ar.onclick = () => { let n = "New role", i = 2; while (bp.roles.some((r) => r.name === n)) n = "New role " + i++; bp.roles.push({ name: n, color: "#5865f2", kind: "cosmetic", hoist: false, mentionable: false }); render(); };
     return;
   }
   if (tab === "onboarding") {
@@ -385,7 +385,7 @@ function bindPreview() {
   P.querySelectorAll("[data-mc]").forEach((el) => (el.onchange = () => { h.messages[+el.dataset.mc].content = el.value; render(); }));
   P.querySelectorAll("[data-mp]").forEach((el) => (el.onchange = () => (h.messages[+el.dataset.mp].pin = el.checked)));
   P.querySelectorAll("[data-md]").forEach((el) => (el.onclick = () => { h.messages.splice(+el.dataset.md, 1); render(); }));
-  const am = P.querySelector("#add-msg"); if (am) am.onclick = () => { h.messages.push({ content: "Nowa wiadomość", embed: null, pin: false }); render(); };
+  const am = P.querySelector("#add-msg"); if (am) am.onclick = () => { h.messages.push({ content: "New message", embed: null, pin: false }); render(); };
   P.querySelector("#del-ch").onclick = () => {
     const c = bp.categories[sel.ci]; c.channels.splice(sel.hi, 1);
     sel = c.channels.length ? { kind: "channel", ci: sel.ci, hi: 0 } : { kind: "category", ci: sel.ci }; render();
@@ -395,7 +395,7 @@ function bindPreview() {
 // ---------- krok 4: budowa ----------
 $("confirm").onchange = () => ($("build").disabled = !$("confirm").checked);
 $("build").onclick = async () => {
-  const b = $("build"); busy(b, true, "Startuję…"); say("build-status", "");
+  const b = $("build"); busy(b, true, "Starting…"); say("build-status", "");
   try {
     const r = await api("/api/build", { token, guild_id: $("guild-id").value.trim(), blueprint: bp });
     $("progress").classList.remove("hidden"); $("confirm").disabled = true;
@@ -407,10 +407,10 @@ async function poll(id) {
     const j = await api("/api/job/" + id);
     $("bar").style.width = j.percent + "%"; $("progress-msg").textContent = j.message;
     if (j.status === "done") {
-      say("build-status", "ok", "✅ Praca skończona! Serwer zbudowany, bot wysłał Ci wiadomość prywatną i opuścił serwer." + (j.warnings.length ? "\nUwagi:\n• " + j.warnings.join("\n• ") : ""));
+      say("build-status", "ok", "✅ All done! Your server is built, the bot sent you a direct message and left the server." + (j.warnings.length ? "\nNotes:\n• " + j.warnings.join("\n• ") : ""));
       $("build-status").style.whiteSpace = "pre-wrap"; return;
     }
-    if (j.status === "error") { say("build-status", "err", "Budowa nie powiodła się: " + j.error + ". Użycie nie zostało zużyte."); $("build").disabled = false; $("build").textContent = "2. Zatwierdź i zbuduj"; $("confirm").disabled = false; return; }
+    if (j.status === "error") { say("build-status", "err", "Build failed: " + j.error + ". Your build was not used up."); $("build").disabled = false; $("build").textContent = "2. Confirm and build"; $("confirm").disabled = false; return; }
   } catch (e) { /* chwilowy blad sieci - probujemy dalej */ }
   setTimeout(() => poll(id), 1500);
 }

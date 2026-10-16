@@ -1,3 +1,2 @@
-// Adres backendu. Pusty = ten sam adres co strona (test lokalny: python -m uvicorn backend.main:app).
-// Po wystawieniu backendu wpisz tu jego publiczny URL, np. "https://discord-maker.twojadomena.pl"
-window.CONFIG = { API_BASE: "" };
+// Backend address. Empty = same origin as the page (local test: python -m uvicorn backend.main:app).
+window.CONFIG = { API_BASE: "https://normal-correctly-chemical-claire.trycloudflare.com" };
