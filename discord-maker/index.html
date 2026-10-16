@@ -53,7 +53,8 @@
   .check input { margin-top: .35rem; }
 
   /* ---- podglad w stylu Discorda ---- */
-  .dc { display: grid; grid-template-columns: 15.5rem 1fr 18rem; border: 1px solid var(--line); border-radius: .9rem; overflow: hidden; background: var(--dc-bg); color: var(--dc-text); min-height: 34rem; max-height: 44rem; font-family: "gg sans", "Segoe UI", system-ui, sans-serif; }
+  .dc { display: grid; grid-template-columns: 15.5rem 1fr 18rem; border: 1px solid var(--line); border-radius: .9rem; overflow: hidden; background: var(--dc-bg); color: var(--dc-text); height: min(44rem, 85vh); grid-template-rows: minmax(0, 1fr); font-family: "gg sans", "Segoe UI", system-ui, sans-serif; }
+  .dc-side, .dc-main, .dc-edit { min-height: 0; }
   .dc-side { background: var(--dc-side); overflow-y: auto; }
   .dc-server { padding: .8rem; font-weight: 700; border-bottom: 1px solid #1e1f22; display: flex; gap: .4rem; }
   .dc-server input { background: transparent; border: 1px solid transparent; font-weight: 700; padding: .15rem .3rem; color: var(--dc-text); }
@@ -95,7 +96,7 @@
   .ob-opt { display: inline-block; background: #35373c; border-radius: 99px; padding: .1rem .6rem; margin: .15rem .15rem 0 0; font-size: .8rem; }
   .bar { height: .8rem; background: var(--panel-2); border-radius: 99px; overflow: hidden; }
   .bar > div { height: 100%; width: 0; background: linear-gradient(90deg, var(--accent), var(--accent-2)); transition: width .5s; }
-  @media (max-width: 900px) { .dc { grid-template-columns: 1fr; max-height: none; } .dc-side { max-height: 16rem; } }
+  @media (max-width: 900px) { .dc { grid-template-columns: 1fr; grid-template-rows: none; height: auto; } .dc-side { max-height: 16rem; } .dc-main { max-height: 22rem; } .dc-edit { max-height: 26rem; } }
   footer { border-top: 1px solid var(--line); margin-top: 2rem; padding: 1.5rem 0 3rem; color: var(--muted); font-size: .88rem; }
 </style>
 <script src="config.js"></script>
