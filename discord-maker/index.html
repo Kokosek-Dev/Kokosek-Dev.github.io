@@ -236,13 +236,23 @@ $("verify").onclick = async () => {
 };
 
 // ---------- krok 2: generowanie ----------
+async function waitPreview(id) {
+  for (let i = 0; i < 400; i++) {
+    await new Promise((r) => setTimeout(r, 2500));
+    let p;
+    try { p = await api("/api/preview/" + id); } catch (e) { if (/No such preview/.test(e.message)) throw e; continue; }
+    if (p.status === "done") return p.blueprint;
+    if (p.status === "error") throw new Error(p.error);
+  }
+  throw new Error("The AI took too long. Try a shorter description.");
+}
 function needLogin(e) { if (/Session expired/.test(e.message)) { token = ""; try { sessionStorage.removeItem("dm_token"); } catch (x) {} $("s-auth").classList.remove("hidden"); $("s-form").classList.add("hidden"); } }
 $("gen").onclick = async () => {
   const b = $("gen"); busy(b, true, "AI is designing… (up to 2 min)"); say("form-status", "info", "The AI is designing your server, this can take a moment…");
   try {
     lastPrompt = $("prompt").value;
     const r = await api("/api/preview", { token, guild_id: $("guild-id").value.trim(), prompt: lastPrompt });
-    bp = r.blueprint; sel = { kind: "channel", ci: 0, hi: 0 }; tab = "channels";
+    bp = await waitPreview(r.preview_id); sel = { kind: "channel", ci: 0, hi: 0 }; tab = "channels";
     say("form-status", "");
     $("s-preview").classList.remove("hidden"); $("s-build").classList.remove("hidden");
     render(); $("s-preview").scrollIntoView({ behavior: "smooth" });
@@ -254,7 +264,7 @@ $("revise").onclick = async () => {
   const b = $("revise"); busy(b, true, "AI is revising…"); say("preview-status", "info", "The AI is applying your changes…");
   try {
     const r = await api("/api/revise", { token, prompt: lastPrompt, blueprint: bp, remark });
-    bp = r.blueprint; sel = { kind: "channel", ci: 0, hi: 0 }; $("remark").value = ""; say("preview-status", "ok", "Changes applied."); render();
+    bp = await waitPreview(r.preview_id); sel = { kind: "channel", ci: 0, hi: 0 }; $("remark").value = ""; say("preview-status", "ok", "Changes applied."); render();
   } catch (e) { say("preview-status", "err", e.message); needLogin(e); }
   busy(b, false);
 };
