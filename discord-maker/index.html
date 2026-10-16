@@ -1,0 +1,419 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Discord Maker | Kokosek-Dev</title>
+<meta name="description" content="Opisz serwer Discord, zobacz podgląd i pozwól botowi zbudować go od zera: kanały, role, weryfikacja i onboarding.">
+<style>
+  :root {
+    --bg: #0a0f1c; --panel: #111827; --panel-2: #172033; --line: #243049;
+    --text: #e8edf7; --muted: #9aa7bf; --accent: #2da8ff; --accent-2: #19d3b0; --danger: #ff6b6b;
+    --dc-bg: #313338; --dc-side: #2b2d31; --dc-dark: #1e1f22; --dc-text: #dbdee1; --dc-muted: #949ba4;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: radial-gradient(900px 500px at 80% -10%, #12315c55, transparent), var(--bg); color: var(--text);
+    font: 16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  a { color: var(--accent); }
+  .wrap { width: min(70rem, calc(100% - 2rem)); margin: 0 auto; }
+  header { position: sticky; top: 0; z-index: 5; backdrop-filter: blur(12px); background: #0a0f1ccc; border-bottom: 1px solid var(--line); }
+  header .wrap { display: flex; align-items: center; gap: 1.25rem; height: 3.5rem; }
+  .brand { font-weight: 800; color: var(--text); text-decoration: none; margin-right: auto; }
+  header a.link { color: var(--muted); text-decoration: none; font-size: .95rem; }
+  h1 { font-size: clamp(1.9rem, 5vw, 3rem); line-height: 1.1; margin: 3rem 0 .8rem; letter-spacing: -.02em; }
+  h1 span { background: linear-gradient(90deg, var(--accent), var(--accent-2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .lead { color: var(--muted); font-size: 1.1rem; max-width: 42rem; margin: 0 0 1.5rem; }
+  .btn { display: inline-block; border: 0; border-radius: .75rem; padding: .75rem 1.2rem; font: inherit; font-weight: 600; cursor: pointer; text-decoration: none; }
+  .btn.primary { background: linear-gradient(90deg, var(--accent), #1b86e6); color: #04121f; }
+  .btn.ghost { background: transparent; border: 1px solid var(--line); color: var(--text); }
+  .btn.danger { background: #ff6b6b; color: #2a0505; }
+  .btn.small { padding: .35rem .7rem; font-size: .85rem; border-radius: .5rem; }
+  .btn:hover { filter: brightness(1.1); }
+  .btn:disabled { opacity: .5; cursor: not-allowed; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 1rem; padding: 1.5rem; margin-bottom: 1.25rem; }
+  .card h2 { margin: 0 0 .3rem; font-size: 1.25rem; }
+  .step-n { display: inline-grid; place-items: center; width: 1.7rem; height: 1.7rem; border-radius: 50%; background: var(--panel-2); color: var(--accent); font-weight: 700; margin-right: .5rem; }
+  .muted { color: var(--muted); font-size: .92rem; margin: 0 0 1rem; }
+  .grid2 { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); }
+  label { display: grid; gap: .35rem; font-size: .9rem; color: var(--muted); }
+  input, select, textarea { background: var(--bg); border: 1px solid var(--line); border-radius: .6rem; color: var(--text); padding: .6rem .8rem; font: inherit; width: 100%; }
+  input:focus, select:focus, textarea:focus { outline: 2px solid #2da8ff66; border-color: var(--accent); }
+  input[type=color] { padding: .1rem; height: 2.2rem; }
+  input[type=checkbox] { width: auto; }
+  textarea { min-height: 8rem; resize: vertical; }
+  .row { display: flex; gap: .6rem; flex-wrap: wrap; align-items: end; }
+  .row > label { flex: 1 1 12rem; }
+  .status { margin: .8rem 0 0; padding: .7rem 1rem; border-radius: .6rem; display: none; font-size: .93rem; }
+  .status.ok { display: block; background: #19d3b01f; border: 1px solid #19d3b066; }
+  .status.err { display: block; background: #ff6b6b1f; border: 1px solid #ff6b6b66; color: #ffd0d0; }
+  .status.info { display: block; background: #2da8ff1a; border: 1px solid #2da8ff55; }
+  .hidden { display: none !important; }
+  .check { display: flex; gap: .6rem; align-items: flex-start; color: var(--text); }
+  .check input { margin-top: .35rem; }
+
+  /* ---- podglad w stylu Discorda ---- */
+  .dc { display: grid; grid-template-columns: 15.5rem 1fr 18rem; border: 1px solid var(--line); border-radius: .9rem; overflow: hidden; background: var(--dc-bg); color: var(--dc-text); min-height: 34rem; max-height: 44rem; font-family: "gg sans", "Segoe UI", system-ui, sans-serif; }
+  .dc-side { background: var(--dc-side); overflow-y: auto; }
+  .dc-server { padding: .8rem; font-weight: 700; border-bottom: 1px solid #1e1f22; display: flex; gap: .4rem; }
+  .dc-server input { background: transparent; border: 1px solid transparent; font-weight: 700; padding: .15rem .3rem; color: var(--dc-text); }
+  .dc-server input:hover, .dc-server input:focus { border-color: #4e5058; background: var(--dc-dark); outline: none; }
+  .dc-cat { margin-top: .9rem; padding: 0 .5rem; font-size: .72rem; font-weight: 700; letter-spacing: .02em; color: var(--dc-muted); cursor: pointer; display: flex; justify-content: space-between; }
+  .dc-cat:hover, .dc-cat.sel { color: #fff; }
+  .dc-ch { margin: 1px .4rem; padding: .28rem .5rem; border-radius: 5px; color: var(--dc-muted); cursor: pointer; font-size: .95rem; display: flex; gap: .4rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .dc-ch:hover { background: #35373c; color: var(--dc-text); }
+  .dc-ch.sel { background: #404249; color: #fff; }
+  .dc-ch i { font-style: normal; opacity: .7; width: 1.1rem; text-align: center; flex: none; }
+  .dc-add { margin: .3rem .9rem; font-size: .78rem; color: var(--dc-muted); cursor: pointer; background: none; border: 0; padding: 0; text-align: left; }
+  .dc-add:hover { color: #fff; }
+  .dc-main { display: flex; flex-direction: column; min-width: 0; }
+  .dc-head { padding: .7rem 1rem; border-bottom: 1px solid #26272b; font-weight: 700; display: flex; gap: .7rem; align-items: baseline; flex-wrap: wrap; }
+  .dc-head small { font-weight: 400; color: var(--dc-muted); }
+  .dc-msgs { padding: 1rem; overflow-y: auto; flex: 1; }
+  .dc-msg { display: flex; gap: .8rem; margin-bottom: 1rem; }
+  .dc-av { width: 2.5rem; height: 2.5rem; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent-2)); flex: none; display: grid; place-items: center; color: #04121f; font-weight: 800; }
+  .dc-name { font-weight: 600; color: #fff; } .dc-tag { background: #5865f2; color: #fff; font-size: .62rem; border-radius: 3px; padding: 0 .3rem; margin-left: .3rem; vertical-align: 1px; }
+  .dc-body { white-space: pre-wrap; word-break: break-word; font-size: .95rem; }
+  .dc-body h3 { margin: .2rem 0; font-size: 1.1rem; } .dc-body code { background: #1e1f22; padding: 0 .25rem; border-radius: 3px; }
+  .dc-embed { border-left: 4px solid; background: #2b2d31; border-radius: 4px; padding: .6rem .8rem; margin-top: .3rem; max-width: 34rem; }
+  .dc-embed b { display: block; color: #fff; }
+  .dc-pin { font-size: .72rem; color: var(--dc-muted); }
+  .dc-empty { color: var(--dc-muted); padding: 2rem; text-align: center; }
+  .dc-edit { background: var(--dc-side); border-left: 1px solid #1e1f22; overflow-y: auto; padding: .8rem; }
+  .dc-edit label { color: var(--dc-muted); font-size: .78rem; margin-bottom: .55rem; }
+  .dc-edit input, .dc-edit select, .dc-edit textarea { background: var(--dc-dark); border-color: #1e1f22; color: var(--dc-text); padding: .4rem .55rem; font-size: .88rem; }
+  .dc-edit textarea { min-height: 5rem; }
+  .dc-edit h4 { margin: .2rem 0 .6rem; font-size: .8rem; text-transform: uppercase; letter-spacing: .05em; color: var(--dc-muted); }
+  .tabs { display: flex; gap: .3rem; margin-bottom: .8rem; }
+  .tab { background: none; border: 1px solid #3f4147; color: var(--dc-muted); border-radius: 6px; padding: .2rem .6rem; cursor: pointer; font: inherit; font-size: .82rem; }
+  .tab.on { background: #404249; color: #fff; }
+  .role-row { display: flex; gap: .4rem; align-items: center; margin-bottom: .4rem; }
+  .role-row input[type=text] { flex: 1; }
+  .role-row input[type=color] { width: 2rem; height: 1.8rem; flex: none; }
+  .ob-card { background: var(--dc-dark); border-radius: 6px; padding: .6rem; margin-bottom: .6rem; font-size: .85rem; }
+  .ob-card b { display: block; margin-bottom: .3rem; }
+  .ob-opt { display: inline-block; background: #35373c; border-radius: 99px; padding: .1rem .6rem; margin: .15rem .15rem 0 0; font-size: .8rem; }
+  .bar { height: .8rem; background: var(--panel-2); border-radius: 99px; overflow: hidden; }
+  .bar > div { height: 100%; width: 0; background: linear-gradient(90deg, var(--accent), var(--accent-2)); transition: width .5s; }
+  @media (max-width: 900px) { .dc { grid-template-columns: 1fr; max-height: none; } .dc-side { max-height: 16rem; } }
+  footer { border-top: 1px solid var(--line); margin-top: 2rem; padding: 1.5rem 0 3rem; color: var(--muted); font-size: .88rem; }
+</style>
+<script src="config.js"></script>
+</head>
+<body>
+<header><div class="wrap">
+  <a class="brand" href="https://kokosek-dev.github.io/">Kokosek-Dev</a>
+  <a class="link" href="https://github.com/Kokosek-Dev">GitHub</a>
+</div></header>
+
+<main class="wrap">
+  <h1>Discord <span>Maker</span></h1>
+  <p class="lead">Opisz swój serwer, zobacz podgląd i popraw go, a bot zbuduje go od zera: kanały, role, weryfikację i onboarding. Potem sam wyjdzie z serwera. Za darmo.</p>
+
+  <!-- KROK 1 -->
+  <section class="card" id="s-auth">
+    <h2><span class="step-n">1</span>Zweryfikuj się</h2>
+    <p class="muted">Podaj swoje ID konta Discord (Ustawienia → Zaawansowane → Tryb dewelopera, potem PPM na swoim profilu → Kopiuj ID użytkownika). Bot wyśle Ci kod w wiadomości prywatnej. <span id="home-hint" class="hidden">Żeby bot mógł do Ciebie napisać, <a id="home-link" target="_blank" rel="noopener">dołącz do serwera z botem</a>.</span></p>
+    <div class="row">
+      <label>Twoje ID Discord<input id="user-id" inputmode="numeric" placeholder="np. 123456789012345678"></label>
+      <button class="btn primary" id="send-code">Wyślij kod</button>
+    </div>
+    <div class="row hidden" id="code-row" style="margin-top:.8rem">
+      <label>Kod z wiadomości prywatnej<input id="code" inputmode="numeric" maxlength="6" placeholder="123456"></label>
+      <button class="btn primary" id="verify">Potwierdź</button>
+    </div>
+    <p class="status" id="auth-status"></p>
+  </section>
+
+  <!-- KROK 2 -->
+  <section class="card hidden" id="s-form">
+    <h2><span class="step-n">2</span>Opisz serwer</h2>
+    <p class="muted">Zostało użyć: <b id="uses-left">-</b>. Podgląd jest nieograniczony, limit zużywa dopiero budowa.</p>
+    <div class="grid2">
+      <label>Opis serwera (temat, styl, role, czego potrzebujesz)
+        <textarea id="prompt" maxlength="1500" placeholder="np. Serwer dla mojej społeczności graczy Minecraft: ogłoszenia, czat, pomoc, kanały głosowe, role dla moderatorów, ciemny klimat."></textarea>
+      </label>
+      <div>
+        <label>ID serwera, który ma zostać przebudowany
+          <input id="guild-id" inputmode="numeric" placeholder="PPM na serwerze → Kopiuj ID serwera">
+        </label>
+        <p class="muted" style="margin-top:.6rem">Musisz mieć na nim Administratora. Bot musi mieć na tym serwerze najwyższą rolę.</p>
+        <button class="btn primary" id="gen">Generuj podgląd</button>
+      </div>
+    </div>
+    <p class="status" id="form-status"></p>
+  </section>
+
+  <!-- KROK 3 -->
+  <section class="card hidden" id="s-preview">
+    <h2><span class="step-n">3</span>Podgląd i edycja</h2>
+    <p class="muted">Kliknij kanał albo kategorię, żeby ją edytować (nazwy, emoji, widoczność, wiadomości). Zakładki pokazują role i onboarding. To jest dokładnie to, co powstanie na serwerze.</p>
+    <div id="preview"></div>
+    <div class="row" style="margin-top:1rem">
+      <label>Chcesz większej zmiany? Napisz do AI (np. „dodaj sekcję na turnieje, zmień motyw na cyberpunk”)
+        <input id="remark" maxlength="600">
+      </label>
+      <button class="btn ghost" id="revise">Popraw przez AI</button>
+    </div>
+    <p class="status" id="preview-status"></p>
+  </section>
+
+  <!-- KROK 4 -->
+  <section class="card hidden" id="s-build">
+    <h2><span class="step-n">4</span>Zbuduj na Discordzie</h2>
+    <p class="muted">Dodaj bota na swój serwer jako administrator, a potem zatwierdź. Bot wyśle Ci wiadomość prywatną po zakończeniu i sam wyjdzie z serwera.</p>
+    <p><a class="btn ghost" id="invite" target="_blank" rel="noopener">1. Dodaj bota na serwer</a></p>
+    <label class="check"><input type="checkbox" id="confirm"><span><b>Rozumiem, że zatwierdzenie USUNIE WSZYSTKO na tym serwerze</b> (kanały, role, emotki, dźwięki) i zbuduje go od nowa według podglądu. Tego nie da się cofnąć.</span></label>
+    <p style="margin-top:1rem"><button class="btn danger" id="build" disabled>2. Zatwierdź i zbuduj</button></p>
+    <div id="progress" class="hidden">
+      <div class="bar"><div id="bar"></div></div>
+      <p class="muted" id="progress-msg" style="margin-top:.5rem"></p>
+    </div>
+    <p class="status" id="build-status"></p>
+  </section>
+</main>
+
+<footer><div class="wrap">Darmowe, 2 budowy na IP. Bot nie zapisuje niczego z Twojego serwera i wychodzi po zakończeniu. Zrobione przez <a href="https://github.com/Kokosek-Dev">Kokosek-Dev</a>.</div></footer>
+
+<script>
+const API = (window.CONFIG && window.CONFIG.API_BASE || "").replace(/\/$/, "");
+const $ = (id) => document.getElementById(id);
+let token = "", bp = null, cfg = {}, sel = { kind: "channel", ci: 0, hi: 0 }, tab = "channels", lastPrompt = "";
+
+// ---------- narzedzia ----------
+async function api(path, body) {
+  const r = await fetch(API + path, body ? { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) } : {});
+  let data = {};
+  try { data = await r.json(); } catch (e) {}
+  if (!r.ok) {
+    const d = data.detail;
+    throw new Error((d && d.message) || (typeof d === "string" ? d : "") || "Błąd " + r.status);
+  }
+  return data;
+}
+function say(id, kind, msg) { const el = $(id); el.className = "status " + (kind || ""); el.textContent = msg || ""; }
+function busy(btn, on, text) { if (on) { btn.dataset.t = btn.textContent; btn.textContent = text; } else btn.textContent = btn.dataset.t || btn.textContent; btn.disabled = on; }
+function esc(s) { return String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])); }
+function md(s) {
+  return esc(s).replace(/^#{1,3} (.*)$/gm, "<h3>$1</h3>").replace(/\*\*(.+?)\*\*/g, "<b>$1</b>")
+    .replace(/\*(.+?)\*/g, "<i>$1</i>").replace(/`([^`]+)`/g, "<code>$1</code>");
+}
+function slug(s) { s = String(s || "").toLowerCase().trim().replace(/[^\w\- ]/g, "").replace(/[\s_]+/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, ""); return s.slice(0, 80) || "channel"; }
+function chDisplay(ch) { return ch.type === "voice" ? (ch.emoji ? ch.emoji + " " : "") + ch.name : (ch.emoji ? ch.emoji + "｜" : "") + ch.name; }
+function catDisplay(c) { return (c.emoji ? c.emoji + " " : "") + c.name.toUpperCase(); }
+const ICON = { text: "#", voice: "🔊", announcement: "📢", forum: "💬" };
+const VIS_LABEL = { inherit: "jak kategoria", public: "publiczny", verified: "po weryfikacji", staff: "tylko staff" };
+const lock = (v) => (v === "verified" ? " 🔒" : v === "staff" ? " 🛡️" : "");
+
+// ---------- krok 1: weryfikacja ----------
+(async function init() {
+  try {
+    cfg = await api("/api/config");
+    $("invite").href = cfg.bot_invite;
+    if (cfg.home_invite) { $("home-link").href = cfg.home_invite; $("home-hint").classList.remove("hidden"); }
+  } catch (e) { say("auth-status", "err", "Backend jest niedostępny. Spróbuj później."); }
+  try { token = sessionStorage.getItem("dm_token") || ""; if (token) { $("s-auth").classList.add("hidden"); $("s-form").classList.remove("hidden"); $("uses-left").textContent = "?"; } } catch (e) {}
+})();
+
+$("send-code").onclick = async () => {
+  const b = $("send-code"); busy(b, true, "Wysyłam…"); say("auth-status", "");
+  try {
+    await api("/api/auth/start", { user_id: $("user-id").value.trim() });
+    $("code-row").classList.remove("hidden");
+    say("auth-status", "ok", "Kod wysłany w wiadomości prywatnej na Discordzie. Wpisz go poniżej.");
+  } catch (e) { say("auth-status", "err", e.message); }
+  busy(b, false);
+};
+$("verify").onclick = async () => {
+  const b = $("verify"); busy(b, true, "Sprawdzam…");
+  try {
+    const r = await api("/api/auth/verify", { user_id: $("user-id").value.trim(), code: $("code").value.trim() });
+    token = r.token; try { sessionStorage.setItem("dm_token", token); } catch (e) {}
+    $("uses-left").textContent = r.uses_left === null ? "bez limitu" : r.uses_left;
+    $("s-auth").classList.add("hidden"); $("s-form").classList.remove("hidden");
+  } catch (e) { say("auth-status", "err", e.message); }
+  busy(b, false);
+};
+
+// ---------- krok 2: generowanie ----------
+function needLogin(e) { if (/Sesja wygas/.test(e.message)) { token = ""; try { sessionStorage.removeItem("dm_token"); } catch (x) {} $("s-auth").classList.remove("hidden"); $("s-form").classList.add("hidden"); } }
+$("gen").onclick = async () => {
+  const b = $("gen"); busy(b, true, "AI projektuje… (do 2 min)"); say("form-status", "info", "AI projektuje Twój serwer, to może potrwać chwilę…");
+  try {
+    lastPrompt = $("prompt").value;
+    const r = await api("/api/preview", { token, guild_id: $("guild-id").value.trim(), prompt: lastPrompt });
+    bp = r.blueprint; sel = { kind: "channel", ci: 0, hi: 0 }; tab = "channels";
+    say("form-status", "");
+    $("s-preview").classList.remove("hidden"); $("s-build").classList.remove("hidden");
+    render(); $("s-preview").scrollIntoView({ behavior: "smooth" });
+  } catch (e) { say("form-status", "err", e.message); needLogin(e); }
+  busy(b, false);
+};
+$("revise").onclick = async () => {
+  const remark = $("remark").value.trim(); if (!remark) return;
+  const b = $("revise"); busy(b, true, "AI poprawia…"); say("preview-status", "info", "AI nanosi zmiany…");
+  try {
+    const r = await api("/api/revise", { token, prompt: lastPrompt, blueprint: bp, remark });
+    bp = r.blueprint; sel = { kind: "channel", ci: 0, hi: 0 }; $("remark").value = ""; say("preview-status", "ok", "Zmiany naniesione."); render();
+  } catch (e) { say("preview-status", "err", e.message); needLogin(e); }
+  busy(b, false);
+};
+
+// ---------- krok 3: podglad Discord-like ----------
+function curCh() { const c = bp.categories[sel.ci]; return c && sel.kind === "channel" ? c.channels[sel.hi] : null; }
+function render() {
+  const side = bp.categories.map((c, ci) => `
+    <div class="dc-cat ${sel.kind === "category" && sel.ci === ci ? "sel" : ""}" data-cat="${ci}"><span>⌄ ${esc(catDisplay(c))}${lock(c.visibility)}</span></div>
+    ${c.channels.map((h, hi) => `<div class="dc-ch ${sel.kind === "channel" && sel.ci === ci && sel.hi === hi ? "sel" : ""}" data-ch="${ci}:${hi}"><i>${ICON[h.type]}</i>${esc(chDisplay(h))}${lock(h.visibility === "inherit" ? "" : h.visibility)}</div>`).join("")}
+    <button class="dc-add" data-addch="${ci}">+ kanał</button>`).join("");
+  const ch = curCh();
+  const msgs = ch ? ch.messages.map((m) => `
+    <div class="dc-msg"><div class="dc-av">DM</div><div><div><span class="dc-name">Discord Maker</span><span class="dc-tag">APL.</span> ${m.pin ? '<span class="dc-pin">📌 przypięte</span>' : ""}</div>
+    <div class="dc-body">${md(m.content)}</div>
+    ${m.embed ? `<div class="dc-embed" style="border-color:${esc(m.embed.color)}"><b>${esc(m.embed.title)}</b><div class="dc-body">${md(m.embed.description)}</div></div>` : ""}</div></div>`).join("") : "";
+  const head = ch ? `<span>${ICON[ch.type]} ${esc(chDisplay(ch))}</span><small>${esc(ch.topic || "")}</small>` : `<span>${esc(bp.server_name)}</span>`;
+  $("preview").innerHTML = `<div class="dc">
+    <div class="dc-side"><div class="dc-server">${"🧩"} <input id="srv-name" value="${esc(bp.server_name)}" maxlength="100"></div>${side}<button class="dc-add" data-addcat>+ kategoria</button></div>
+    <div class="dc-main"><div class="dc-head">${head}</div><div class="dc-msgs">${msgs || '<div class="dc-empty">Ten kanał nie ma wiadomości startowych.</div>'}</div></div>
+    <div class="dc-edit"><div class="tabs">${["channels:Kanały", "roles:Role", "onboarding:Onboarding"].map((t) => { const [k, n] = t.split(":"); return `<button class="tab ${tab === k ? "on" : ""}" data-tab="${k}">${n}</button>`; }).join("")}</div>${editor()}</div>
+  </div>`;
+  bindPreview();
+}
+
+function sel_vis(id, val, withInherit) {
+  const opts = (withInherit ? ["inherit"] : []).concat(["public", "verified", "staff"]);
+  return `<select id="${id}">${opts.map((o) => `<option value="${o}" ${o === val ? "selected" : ""}>${VIS_LABEL[o]}</option>`).join("")}</select>`;
+}
+function editor() {
+  if (tab === "roles") {
+    return `<h4>Role</h4>${bp.roles.map((r, i) => `<div class="role-row"><input type="color" data-rcolor="${i}" value="${r.color}"><input type="text" data-rname="${i}" value="${esc(r.name)}" maxlength="100">
+      <button class="btn ghost small" data-rdel="${i}" ${r.kind === "verified" ? "disabled title='Rola weryfikacji'" : ""}>✕</button></div>
+      <div class="muted" style="margin:-.2rem 0 .5rem;color:var(--dc-muted);font-size:.75rem">${esc(r.kind)}${r.kind === "verified" ? " · dostają ją wszyscy po weryfikacji" : ""}</div>`).join("")}
+      <button class="btn ghost small" id="add-role">+ rola</button>`;
+  }
+  if (tab === "onboarding") {
+    return `<h4>Onboarding</h4><div class="ob-card" style="border:1px solid #4e5058"><b>(zawsze) ${esc(bp.language === "pl" ? "Regulamin" : "Rules")}</b>Akceptacja daje rolę <span class="ob-opt">${esc(bp.verified_role)}</span> i odblokowuje resztę serwera.</div>` +
+      bp.onboarding.prompts.map((p, pi) => `<div class="ob-card"><b>${esc(p.title)}</b>${p.options.map((o) => `<span class="ob-opt">${esc(o.emoji)} ${esc(o.title)}</span>`).join("")}
+      <div style="margin-top:.4rem"><button class="btn ghost small" data-pdel="${pi}">Usuń pytanie</button></div></div>`).join("");
+  }
+  if (sel.kind === "category") {
+    const c = bp.categories[sel.ci];
+    return `<h4>Kategoria</h4><label>Nazwa<input id="e-name" value="${esc(c.name)}" maxlength="80"></label>
+      <label>Emoji<input id="e-emoji" value="${esc(c.emoji)}" maxlength="8"></label>
+      <label>Widoczność${sel_vis("e-vis", c.visibility, false)}</label>
+      <button class="btn danger small" id="del-cat">Usuń kategorię</button>`;
+  }
+  const h = curCh(); if (!h) return `<h4>Kanał</h4><p class="muted">Wybierz kanał.</p>`;
+  return `<h4>Kanał</h4><label>Nazwa<input id="e-name" value="${esc(h.name)}" maxlength="90"></label>
+    <label>Emoji<input id="e-emoji" value="${esc(h.emoji)}" maxlength="8"></label>
+    <label>Typ<select id="e-type">${["text", "voice", "announcement", "forum"].map((t) => `<option ${t === h.type ? "selected" : ""}>${t}</option>`).join("")}</select></label>
+    <label>Widoczność${sel_vis("e-vis", h.visibility, true)}</label>
+    ${h.type !== "voice" ? `<label>Opis kanału<input id="e-topic" value="${esc(h.topic)}" maxlength="1000"></label>
+    <label class="check" style="color:var(--dc-text)"><input type="checkbox" id="e-ro" ${h.readonly ? "checked" : ""}> Tylko do czytania</label>` : ""}
+    ${h.type === "text" || h.type === "announcement" ? `<h4 style="margin-top:.8rem">Wiadomości startowe</h4>${h.messages.map((m, i) => `<label>Treść<textarea data-mc="${i}">${esc(m.content)}</textarea></label>
+      <label class="check" style="color:var(--dc-text)"><input type="checkbox" data-mp="${i}" ${m.pin ? "checked" : ""}> Przypnij</label><button class="btn ghost small" data-md="${i}">Usuń wiadomość</button><hr style="border-color:#1e1f22">`).join("")}
+      ${h.messages.length < 3 ? '<button class="btn ghost small" id="add-msg">+ wiadomość</button>' : ""}` : ""}
+    <p style="margin-top:.8rem"><button class="btn danger small" id="del-ch">Usuń kanał</button></p>`;
+}
+
+function renameRefs(kind, from, to) {
+  if (kind === "role") {
+    if (bp.verified_role === from) bp.verified_role = to;
+    bp.onboarding.prompts.forEach((p) => p.options.forEach((o) => (o.roles = o.roles.map((r) => (r === from ? to : r)))));
+  } else {
+    if (bp.rules_channel === from) bp.rules_channel = to;
+    if (bp.updates_channel === from) bp.updates_channel = to;
+    bp.onboarding.prompts.forEach((p) => p.options.forEach((o) => (o.channels = o.channels.map((c) => (c === from ? to : c)))));
+  }
+}
+function allSlugs(except) { return new Set(bp.categories.flatMap((c) => c.channels).filter((h) => h !== except && h.type !== "voice").map((h) => h.name)); }
+
+function bindPreview() {
+  const P = $("preview");
+  P.querySelector("#srv-name").oninput = (e) => (bp.server_name = e.target.value);
+  P.querySelectorAll("[data-cat]").forEach((el) => (el.onclick = () => { sel = { kind: "category", ci: +el.dataset.cat }; tab = "channels"; render(); }));
+  P.querySelectorAll("[data-ch]").forEach((el) => (el.onclick = () => { const [ci, hi] = el.dataset.ch.split(":").map(Number); sel = { kind: "channel", ci, hi }; tab = "channels"; render(); }));
+  P.querySelectorAll("[data-addch]").forEach((el) => (el.onclick = () => {
+    const ci = +el.dataset.addch, c = bp.categories[ci]; let n = "nowy-kanal", i = 2; const used = allSlugs();
+    while (used.has(n)) n = "nowy-kanal-" + i++;
+    c.channels.push({ name: n, emoji: "💬", type: "text", topic: "", visibility: "inherit", readonly: false, messages: [] });
+    sel = { kind: "channel", ci, hi: c.channels.length - 1 }; tab = "channels"; render();
+  }));
+  const addCat = P.querySelector("[data-addcat]");
+  addCat.onclick = () => { bp.categories.push({ name: "Nowa kategoria", emoji: "📁", visibility: "public", channels: [] }); sel = { kind: "category", ci: bp.categories.length - 1 }; tab = "channels"; render(); };
+  P.querySelectorAll("[data-tab]").forEach((el) => (el.onclick = () => { tab = el.dataset.tab; render(); }));
+
+  if (tab === "roles") {
+    P.querySelectorAll("[data-rname]").forEach((el) => (el.onchange = () => {
+      const i = +el.dataset.rname, from = bp.roles[i].name, to = el.value.trim().slice(0, 100) || from;
+      if (bp.roles.some((r, j) => j !== i && r.name.toLowerCase() === to.toLowerCase())) { el.value = from; return; }
+      bp.roles[i].name = to; renameRefs("role", from, to); render();
+    }));
+    P.querySelectorAll("[data-rcolor]").forEach((el) => (el.oninput = () => (bp.roles[+el.dataset.rcolor].color = el.value)));
+    P.querySelectorAll("[data-rdel]").forEach((el) => (el.onclick = () => {
+      const r = bp.roles.splice(+el.dataset.rdel, 1)[0];
+      bp.onboarding.prompts.forEach((p) => p.options.forEach((o) => (o.roles = o.roles.filter((x) => x !== r.name))));
+      render();
+    }));
+    const ar = P.querySelector("#add-role");
+    if (ar) ar.onclick = () => { let n = "Nowa rola", i = 2; while (bp.roles.some((r) => r.name === n)) n = "Nowa rola " + i++; bp.roles.push({ name: n, color: "#5865f2", kind: "cosmetic", hoist: false, mentionable: false }); render(); };
+    return;
+  }
+  if (tab === "onboarding") {
+    P.querySelectorAll("[data-pdel]").forEach((el) => (el.onclick = () => { bp.onboarding.prompts.splice(+el.dataset.pdel, 1); render(); }));
+    return;
+  }
+  if (sel.kind === "category") {
+    const c = bp.categories[sel.ci];
+    P.querySelector("#e-name").onchange = (e) => { c.name = e.target.value.trim() || c.name; render(); };
+    P.querySelector("#e-emoji").onchange = (e) => { c.emoji = e.target.value.replace(/[A-Za-z0-9\s]/g, "").slice(0, 8); render(); };
+    P.querySelector("#e-vis").onchange = (e) => { c.visibility = e.target.value; render(); };
+    P.querySelector("#del-cat").onclick = () => { if (bp.categories.length > 1) { bp.categories.splice(sel.ci, 1); sel = { kind: "channel", ci: 0, hi: 0 }; render(); } };
+    return;
+  }
+  const h = curCh(); if (!h) return;
+  P.querySelector("#e-name").onchange = (e) => {
+    const from = h.name; let to = h.type === "voice" ? e.target.value.trim() || from : slug(e.target.value);
+    if (h.type !== "voice") { const used = allSlugs(h); let n = to, i = 2; while (used.has(n)) n = to + "-" + i++; to = n; renameRefs("channel", from, to); }
+    h.name = to; render();
+  };
+  P.querySelector("#e-emoji").onchange = (e) => { h.emoji = e.target.value.replace(/[A-Za-z0-9\s|｜#]/g, "").slice(0, 8); render(); };
+  P.querySelector("#e-type").onchange = (e) => { h.type = e.target.value; if (h.type === "voice") { h.messages = []; h.readonly = false; } render(); };
+  P.querySelector("#e-vis").onchange = (e) => { h.visibility = e.target.value; render(); };
+  const t = P.querySelector("#e-topic"); if (t) t.onchange = (e) => { h.topic = e.target.value; render(); };
+  const ro = P.querySelector("#e-ro"); if (ro) ro.onchange = (e) => (h.readonly = e.target.checked);
+  P.querySelectorAll("[data-mc]").forEach((el) => (el.onchange = () => { h.messages[+el.dataset.mc].content = el.value; render(); }));
+  P.querySelectorAll("[data-mp]").forEach((el) => (el.onchange = () => (h.messages[+el.dataset.mp].pin = el.checked)));
+  P.querySelectorAll("[data-md]").forEach((el) => (el.onclick = () => { h.messages.splice(+el.dataset.md, 1); render(); }));
+  const am = P.querySelector("#add-msg"); if (am) am.onclick = () => { h.messages.push({ content: "Nowa wiadomość", embed: null, pin: false }); render(); };
+  P.querySelector("#del-ch").onclick = () => {
+    const c = bp.categories[sel.ci]; c.channels.splice(sel.hi, 1);
+    sel = c.channels.length ? { kind: "channel", ci: sel.ci, hi: 0 } : { kind: "category", ci: sel.ci }; render();
+  };
+}
+
+// ---------- krok 4: budowa ----------
+$("confirm").onchange = () => ($("build").disabled = !$("confirm").checked);
+$("build").onclick = async () => {
+  const b = $("build"); busy(b, true, "Startuję…"); say("build-status", "");
+  try {
+    const r = await api("/api/build", { token, guild_id: $("guild-id").value.trim(), blueprint: bp });
+    $("progress").classList.remove("hidden"); $("confirm").disabled = true;
+    poll(r.job_id);
+  } catch (e) { say("build-status", "err", e.message); busy(b, false); needLogin(e); }
+};
+async function poll(id) {
+  try {
+    const j = await api("/api/job/" + id);
+    $("bar").style.width = j.percent + "%"; $("progress-msg").textContent = j.message;
+    if (j.status === "done") {
+      say("build-status", "ok", "✅ Praca skończona! Serwer zbudowany, bot wysłał Ci wiadomość prywatną i opuścił serwer." + (j.warnings.length ? "\nUwagi:\n• " + j.warnings.join("\n• ") : ""));
+      $("build-status").style.whiteSpace = "pre-wrap"; return;
+    }
+    if (j.status === "error") { say("build-status", "err", "Budowa nie powiodła się: " + j.error + ". Użycie nie zostało zużyte."); $("build").disabled = false; $("build").textContent = "2. Zatwierdź i zbuduj"; $("confirm").disabled = false; return; }
+  } catch (e) { /* chwilowy blad sieci - probujemy dalej */ }
+  setTimeout(() => poll(id), 1500);
+}
+</script>
+</body>
+</html>
