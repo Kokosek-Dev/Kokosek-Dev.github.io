@@ -248,7 +248,7 @@ async function waitPreview(id) {
 }
 function needLogin(e) { if (/Session expired/.test(e.message)) { token = ""; try { sessionStorage.removeItem("dm_token"); } catch (x) {} $("s-auth").classList.remove("hidden"); $("s-form").classList.add("hidden"); } }
 $("gen").onclick = async () => {
-  const b = $("gen"); busy(b, true, "AI is designing… (up to 2 min)"); say("form-status", "info", "The AI is designing your server, this can take a moment…");
+  const b = $("gen"); busy(b, true, "AI is designing… (up to 5 min)"); say("form-status", "info", "The AI is designing your server. This can take up to 5 minutes, please keep this tab open…");
   try {
     lastPrompt = $("prompt").value;
     const r = await api("/api/preview", { token, guild_id: $("guild-id").value.trim(), prompt: lastPrompt });
